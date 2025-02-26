@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "c6tbZOYpBq0=",
+  "dgSpecHash": "Uze5XL1KfTY=",
   "success": true,
-  "projectFilePath": "K:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj",
+  "projectFilePath": "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.aspnetcore.authentication.negotiate\\8.0.13\\microsoft.aspnetcore.authentication.negotiate.8.0.13.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\8.0.13\\microsoft.aspnetcore.connections.abstractions.8.0.13.nupkg.sha512",

@@ -9,14 +9,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
-   .AddNegotiate();
+#region 用于windows验证登录
+// builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+//    .AddNegotiate();
 
-builder.Services.AddAuthorization(options =>
-{
-    // By default, all incoming requests will be authorized according to the default policy.
-    options.FallbackPolicy = options.DefaultPolicy;
-});
+// builder.Services.AddAuthorization(options =>
+// {
+//     // By default, all incoming requests will be authorized according to the default policy.
+//     options.FallbackPolicy = options.DefaultPolicy;
+// });
+#endregion
 
 var app = builder.Build();
 

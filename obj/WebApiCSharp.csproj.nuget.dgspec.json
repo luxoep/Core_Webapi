@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "K:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj": {}
+    "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj": {}
   },
   "projects": {
-    "K:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj": {
+    "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "K:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj",
+        "projectUniqueName": "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj",
         "projectName": "WebApiCSharp",
-        "projectPath": "K:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj",
+        "projectPath": "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\WebApiCSharp.csproj",
         "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "K:\\CSharp\\CSharpWebapi\\WebApiCSharp\\obj\\",
+        "outputPath": "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "J:\\VS2022\\VS2022.3\\NuGetPackages"

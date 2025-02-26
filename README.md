@@ -113,3 +113,79 @@
                   - .mdb -> application/x-mdb
                   - .mht -> message/rfc822
                 媒体类型是由扩展名和内容类型组成，媒体类型使用MIME类型表示，除了包括内容类型，还会包括扩展名
+    理解WebApi
+        - API是应用程序编程接口，向客户端提供服务的接口
+        - WebAPI是在API的基础上使用HTTP协议构建的API
+        - WebAPI是放在一台提供服务的Web服务器上的，然后公开一些API接口供外部通过URL地址调用
+        - WebAPI就是通过HTTP协议在互联网上提供服务的，相比API来说，在应用上有些限制WebAPI只是通过URL地址来提供服务
+        - WebAPI提供的服务是存放在一个固定的Web服务器上的，通过一个URL地址开放服务
+        - 而调用WebAPI的一端，统一称为客户端，例如：浏览器、手机端APP、桌面应用程序等都是客户端
+        - 对于WebApi能够提供的服务主要包括：获取数据、添加数据、更新数据、删除数据和查询数据（CURD）
+    理解Restful
+        - Restful是API设计的一种规范，主要用于Web服务的接口设计
+            如果有一个架构符合Rest原则，就称它为Restful架构
+        - 微软在ASP.NET中设计的WebApi就是基于Restful设计的，所有可以提供多种应用程序调用
+        - Rest规范
+          - Rest组成：
+            - Resource：表示资源，即数据，如学生基本信息等。
+            - Representational：表现形式，比如用JSON，XML，JPEG等
+            - State Transfer：状态变化，通过HTTP动词实现
+          - 使用Restful架构的好处是它只提供资源，可供各种各样的客户端调用，不再像MVC、PHP、JSP等这种一体的设计，即前后端分离
+          - 服务器端：服务器端通过Restful标准的WebApi提供资源，使用什么语言实现无所谓
+          - 客户端：而在客户端，只需要调用这个WebApi处理资源即可，实现了前后端分离
+        - HTTP动词
+            在ASP.NET Core WebAPI中，微软定义了4种用于执行资源的CRUD操作。
+                MVC、WebApi等是BS结构Web应用程序大多数都是基于ASP.NET Core
+                    Browser-Server（浏览器-服务器）结构，这是一种客户端-服务器架构
+                MVC 和 Web API 都是构建在 ASP.NET Core 上的框架，用于开发 BS 结构的 Web 应用程序
+            常用HTTP动词：
+              - HTTP GET：用于获取服务器上的资源。
+                  GET: http://xx/api/TodoItems/(id)，根据id获取资源。
+              - HTTP POST：用于添加资源到服务器上。
+                  POST: http://xx/api/TodoItems，添加新资源。
+              - HTTP PUT：用于更新资源到服务器上。
+                  PUT: http://xx/api/TodoItems/(id)，根据id更新资源。
+              - HTTP DELETE：用于删除服务器上的资源。
+                  DELETE: http://xx/api/TodoItems/(id)，根据id删除资源。
+    理解ASP.NET Core中的WebApi
+        1.WebApi是提供数据服务的一种HTTP服务接口，使用URL地址提供，可以在任意客户端（如JavaScript、jQuery、VUE、React、Angular、手机APP端、PC端等）调用，通过URL地址实现数据的添加、更新、删除和查询操作
+        2.WebApi只是一种提供数据的HTTP服务，实现了服务器与客户端的分离，且客户端不再受限制
+    ASP.NET WebApi
+        1.微软官方定义：可以对接各种客户端（浏览器、移动设备、桌面应用等），构建HTTP服务框架
+        2.ASP.NET的WebAPI是在.NET Framework下的ASP.NET MVC框架中产生的，利用了MVC框架中的M（模型）和C（控制器），但没有V（视图）
+        3.若要处理HTTP请求，Web API需要使用控制器，Web API中的控制器是继承了ControllerBase的子类，与MVC中的控制器继承的Controller是不一样的
+            - WebApi不需要视图，所以可以继承ControllerBase类
+            - MVC需要视图，所以要继承Controller类
+        4.在ASP.NET Core中，WebApi是通过控制器中的操作（方法）提供资源和服务
+    ASP.NET Core WebApi应用程序
+        - ASP.NET Core是一个跨平台开源的Web开发框架，基于此框架可以开发MVC应用、Razor单页应用、WebAPI等
+        - 在ASP.NET Core框架上开发的WebAPI是基于RESTful规范创建出优秀WebAPI，供客户端应用调用，适合服务器端和客户端分离的应用程序
+    创建WebApi项目
+        vs2022中选择ASP.NET Core Web Api
+            1.控制器文件需要放在Controllers文件夹中，并且以Controller为结尾命名
+            2.WebApi的控制器需要使用[ApiController]特性，表示该控制器是一个API控制器
+            3.appsetting.json:JSON格式的应用程序配置文件(数据库连接字符串、发布到生产环境等)
+                appsettings.Development.json:为开发环境配置
+            4.Program.cs:控制台应用程序入口，针对WebApi进行初始化基础配置
+    理解ASP.NET Core WebApi控制器
+        ControllerBase基类
+            1.ControllerBase类提供了很多用于处理HTTP请求的属性和方法
+            2.ControllerBase类不支持视图的MVC控制器的抽象类
+            3.ControllerBase基类只支持HTTP请求的相关操作，所以适合WebApi
+            4.MVC中的控制器是Controller基类，是继承ControllerBase的基类
+                - MVC具备WebApi功能
+        ApiController特性
+            1.默认情况下，API控制器是具有ApiController特性
+            2.ApiController继承了ControllerAttribute
+            3.ApiController属性提供的额外功能如下：
+                - 自动模型状态验证：框架会自动验证ModelState，在Action执行之前，Model绑定之后，在内部会检查ModelState的IsValid是否为False
+                  - - Action参数就是在控制器下面创建的方法
+                - 参数绑定策略的自动推断：例如[FromBody]标注的Action参数，在反序列化时，使用了[ApiController]属性之后，则可不再使用[FromBody]特性
+                - 处理multipart/form-data请求：如果你的Action里面的一个参数指定了[FromFile]特性（主要用于文件上传），框架会自动假设请求是multipart/form-data类型
+                - ApiExplorer的可见性：默认所有的Controller对ApiExplorer都是可见的，所以，不影响swagger的生成
+                - 基于特性的路由：框架要求只使用基于特性的路由，使用[Route("")]指定路由
+        Route特性
+            1.对于API控制器，如果使用了[ApiController]属性，则要求必须使用特性路由来匹配请求的URL。
+            2.特性路由也称为属性路由，是指直接在控制器上使用[Route]特性指定路由模板实现URL匹配。
+
+            在launchSettings.json中可以配置访问地址等参数

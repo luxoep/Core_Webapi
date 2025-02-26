@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiCSharp.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
@@ -20,7 +20,7 @@ public class WeatherForecastController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
+    [HttpGet("GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -30,5 +30,19 @@ public class WeatherForecastController : ControllerBase
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
+    }
+    [HttpPost("AddContent")]
+    public string AddWeatherForecast(WeatherForecast weather)
+    {
+        if (weather != null)
+        {
+            DateOnly dt = weather.Date;
+            string? Summary = weather.Summary;
+            int iC = weather.TemperatureC;
+            int iF = weather.TemperatureF;
+            return "1";
+
+        }
+        return "0";
     }
 }
