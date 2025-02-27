@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddSwaggerGen();
 // {
 //     // By default, all incoming requests will be authorized according to the default policy.
 //     options.FallbackPolicy = options.DefaultPolicy;
+//     // options.FallbackPolicy=new AuthorizationPolicyBuilder()
+//     //     .RequireAuthenticatedUser()  // 要求用户身份验证
+//     //     .Build();  // 构建授权策略
 // });
 #endregion
 
