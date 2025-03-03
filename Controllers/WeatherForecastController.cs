@@ -31,18 +31,4 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
     }
-    [HttpPost("AddContent")]
-    public string AddWeatherForecast(WeatherForecast weather)
-    {
-        if (weather != null)
-        {
-            DateOnly dt = weather.Date;
-            string? Summary = weather.Summary;
-            int iC = weather.TemperatureC;
-            int iF = weather.TemperatureF;
-            return "1";
-
-        }
-        return "0";
-    }
 }

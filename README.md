@@ -2,6 +2,284 @@
 
 ## DLC
 
+    IActionResult 是一个接口，提供了更高的灵活性，允许返回多种类型的响应。
+    ActionResult<T> 是一个泛型类，继承自 IActionResult，提供了类型安全和更明确的返回类型。
+
+    ActionResult类：
+        示例：
+            // 定义一个 Web API 控制器，使用 [ApiController] 特性标记为 API 控制器
+            // 路由路径为 "api/[controller]"，即控制器名称对应的 API 路径
+            [ApiController]
+            [Route("api/[controller]")]
+            public class MyController : ControllerBase
+            {
+                // 成功响应示例
+                [HttpGet("success")]
+                public ActionResult Success()
+                {
+                    // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
+                    return Ok(new { message = "Request succeeded" });
+                }
+
+                // 未找到资源的示例
+                [HttpGet("not-found")]
+                public ActionResult NotFoundExample()
+                {
+                    // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
+                    return NotFound(new { error = "Resource not found" });
+                }
+
+                // 请求无效的示例
+                [HttpGet("bad-request")]
+                public ActionResult BadRequestExample()
+                {
+                    // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
+                    return BadRequest(new { error = "Invalid input" });
+                }
+
+                // 创建资源的示例
+                [HttpGet("created")]
+                public ActionResult CreatedExample()
+                {
+                    // 创建一个新实体对象
+                    var newEntity = new { Id = 1, Name = "New Entity" };
+                    // 返回 HTTP 状态码 201 Created，并附带新创建资源的 URI 和实体内容
+                    // 使用 CreatedAtAction 方法生成指向新资源的 URI
+                    return CreatedAtAction(nameof(GetById), new { id = newEntity.Id }, newEntity);
+                }
+
+                // 禁止访问的示例
+                [HttpGet("forbidden")]
+                public ActionResult ForbiddenExample()
+                {
+                    // 返回 HTTP 状态码 403 Forbidden
+                    return Forbidden();
+                }
+
+                // 自定义状态码的示例
+                [HttpGet("custom-status")]
+                public ActionResult CustomStatus()
+                {
+                    // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
+                    return StatusCode(503, new { error = "Service Unavailable" });
+                }
+
+                // 返回文件的示例
+                [HttpGet("file")]
+                public ActionResult FileExample()
+                {
+                    // 读取本地文件的内容（假设文件名为 "example.pdf"）
+                    byte[] fileContents = System.IO.File.ReadAllBytes("example.pdf");
+                    // 返回文件内容，并指定 MIME 类型为 "application/pdf"
+                    return File(fileContents, "application/pdf");
+                }
+
+                // 重定向的示例
+                [HttpGet("redirect")]
+                public ActionResult RedirectExample()
+                {
+                    // 返回 HTTP 状态码 302 Found，并重定向到指定的 URL
+                    // 注意：URL 应该是一个有效的地址
+                    return Redirect("https://example.com");
+                }
+
+                // 返回问题详情的示例
+                [HttpGet("problem")]
+                public ActionResult ProblemExample()
+                {
+                    // 返回 HTTP 状态码 500 Internal Server Error，并附带详细的错误信息
+                    return Problem(detail: "An error occurred", statusCode: 500);
+                }
+            }
+    IActionResult类：
+        - 属性：
+            示例：
+                namespace YourNamespace
+                {
+                    [ApiController]
+                    [Route("api/[controller]")]
+                    public class MyController : ControllerBase
+                    {
+                        // 模拟的用户数据
+                        private static List<Person> people = new List<Person>
+                        {
+                            new Person { Id = 1, Name = "张三", Age = 12, Gender = "男" },
+                            new Person { Id = 2, Name = "王五", Age = 19, Gender = "男" }
+                        };
+
+                        // 成功响应示例
+                        [HttpGet("success")]
+                        public IActionResult Success()
+                        {
+                            // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
+                            return Ok(new { message = "Request succeeded" });
+                        }
+
+                        // 未找到资源的示例
+                        [HttpGet("not-found")]
+                        public IActionResult NotFoundExample()
+                        {
+                            // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
+                            return NotFound(new { error = "Resource not found" });
+                        }
+
+                        // 请求无效的示例
+                        [HttpGet("bad-request")]
+                        public IActionResult BadRequestExample()
+                        {
+                            // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
+                            return BadRequest(new { error = "Invalid input" });
+                        }
+
+                        // 创建资源的示例
+                        [HttpGet("created")]
+                        public IActionResult CreatedExample()
+                        {
+                            // 创建一个新实体对象
+                            var newEntity = new { Id = 1, Name = "New Entity" };
+                            // 返回 HTTP 状态码 201 Created，并附带新创建资源的 URI 和实体内容
+                            return CreatedAtAction(nameof(GetById), new { id = newEntity.Id }, newEntity);
+                        }
+
+                        // 禁止访问的示例
+                        [HttpGet("forbidden")]
+                        public IActionResult ForbiddenExample()
+                        {
+                            // 返回 HTTP 状态码 403 Forbidden
+                            return Forbidden();
+                        }
+
+                        // 自定义状态码的示例
+                        [HttpGet("custom-status")]
+                        public IActionResult CustomStatus()
+                        {
+                            // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
+                            return StatusCode(503, new { error = "Service Unavailable" });
+                        }
+
+                        // 返回文件的示例
+                        [HttpGet("file")]
+                        public IActionResult FileExample()
+                        {
+                            // 读取本地文件的内容（假设文件名为 "example.pdf"）
+                            byte[] fileContents = System.IO.File.ReadAllBytes("example.pdf");
+                            // 返回文件内容，并指定 MIME 类型为 "application/pdf"
+                            return File(fileContents, "application/pdf");
+                        }
+
+                        // 重定向的示例
+                        [HttpGet("redirect")]
+                        public IActionResult RedirectExample()
+                        {
+                            // 返回 HTTP 状态码 302 Found，并重定向到指定的 URL
+                            return Redirect("https://example.com");
+                        }
+
+                        // 返回问题详情的示例
+                        [HttpGet("problem")]
+                        public IActionResult ProblemExample()
+                        {
+                            // 返回 HTTP 状态码 500 Internal Server Error，并附带详细的错误信息
+                            return Problem(detail: "An error occurred", statusCode: 500);
+                        }
+
+                        // 返回挑战响应的示例（通常用于身份验证）
+                        [HttpGet("challenge")]
+                        public IActionResult ChallengeExample()
+                        {
+                            // 返回 HTTP 状态码 401 Unauthorized，并触发身份验证挑战
+                            return Challenge();
+                        }
+
+                        // 返回登出响应的示例
+                        [HttpGet("signout")]
+                        public IActionResult SignOutExample()
+                        {
+                            // 返回 HTTP 状态码 200 OK，并触发用户登出
+                            return SignOut();
+                        }
+                    }
+
+                    // 定义 Person 类
+                    public class Person
+                    {
+                        public int Id { get; set; }
+                        public string Name { get; set; }
+                        public int Age { get; set; }
+                        public string Gender { get; set; }
+                    }
+                }
+        - 使用方法：
+          1. 通过查询字符串传递参数
+              查询字符串是附加在 URL 末尾的键值对，通常用于传递可选参数。例如：
+              https://example.com/api/mycontroller?param1=value1&param2=value2
+              在 ASP.NET Core 中，你可以通过方法参数接收查询字符串参数。例如：
+                  [HttpGet("search")]
+                  public IActionResult Search(string param1, int param2)
+                  {
+                      // param1 和 param2 是查询字符串参数
+                      return Ok(new { param1, param2 });
+                  }
+                  调用示例：
+                  GET /api/mycontroller/search?param1=example&param2=123
+          2. 通过路由参数传递参数
+              路由参数是嵌入在 URL 路径中的参数，通常用于传递必需的参数。例如：
+              https://example.com/api/mycontroller/123
+              在 ASP.NET Core 中，可以通过在路由模板中定义参数来接收路由参数。例如：
+                  [HttpGet("{id}")]
+                  public IActionResult GetById(int id)
+                  {
+                      // id 是路由参数
+                      return Ok(new { id });
+                  }
+                  调用示例：
+                  GET /api/mycontroller/123
+          3. 同时使用查询字符串和路由参数
+              可以在同一个方法中同时使用查询字符串和路由参数。例如：
+                  [HttpGet("{id}")]
+                  public IActionResult GetById(int id, [FromQuery] string queryParam)
+                  {
+                      // id 是路由参数，queryParam 是查询字符串参数
+                      return Ok(new { id, queryParam });
+                  }
+                  调用示例：
+                  GET /api/mycontroller/123?queryParam=example
+          4. 使用 [FromQuery] 特性
+              对于复杂的查询参数，可以使用 [FromQuery] 特性明确指定参数来源。例如：
+                  [HttpGet("search")]
+                  public IActionResult Search([FromQuery] string param1, [FromQuery] int param2)
+                  {
+                      return Ok(new { param1, param2 });
+                  }
+                  调用示例：
+                  GET /api/mycontroller/search?param1=example&param2=123
+          5. 接收多个查询参数
+              如果需要接收多个查询参数，可以定义一个模型类来封装这些参数。例如：
+                  public class SearchParams
+                  {
+                      public string Param1 { get; set; }
+                      public int Param2 { get; set; }
+                  }
+
+                  [HttpGet("search")]
+                  public IActionResult Search([FromQuery] SearchParams params)
+                  {
+                      return Ok(params);
+                  }
+                  调用示例：
+                  GET /api/mycontroller/search?param1=example&param2=123
+          6. 默认值和可选参数
+              可以为查询字符串参数提供默认值或标记为可选。例如：
+                  [HttpGet("search")]
+                  public IActionResult Search(string param1 = "default", int? param2 = null)
+                  {
+                      return Ok(new { param1, param2 });
+                  }
+                  调用示例：
+                  GET /api/mycontroller/search
+                  GET /api/mycontroller/search?param1=example
+                  GET /api/mycontroller/search?param2=123
+        
 ## WebAPI基础
 
 ### 1-8
@@ -189,3 +467,48 @@
             2.特性路由也称为属性路由，是指直接在控制器上使用[Route]特性指定路由模板实现URL匹配。
 
             在launchSettings.json中可以配置访问地址等参数
+
+## HTTP资源操作
+
+### 2_1_HTTPGet
+
+    创建控制器
+      1. MVC控制器继承的是Controller基类
+      2. API控制器继承的是ControllerBase基类
+      3. 控制器都是以Controller为结尾
+    添加操作
+        1. 在控制器下面创建的方法叫做操作
+        2. 属性路由
+            - [Route("api/[controller]")]
+            - URL地址以api/开头，后跟控制器名称，不需要带后缀（api/GetTest）
+            - 路由模板中匹配的URL地址不区分大小写
+        3. 在控制器内，创建的方法没有指定操作方式关键字或者没有指定路由，则默认为Get请求，有且只能由一个
+            - 在使用指定路由时，可以直接通过地址栏修改路由访问地址获取数据
+              - 示例：
+                    [Route("GetStr1")]
+                    public string GetMain1() {}
+                    [Route("GetStr2")]
+                    public string GetMain2(){}
+        4. 可以直接使用类来存储数据
+            示例：
+                public List<Person> Get_3()
+                {
+                    List<Person> per = new List<Person>()
+                    {
+                        new Person(1,"张三",12,'男'),
+                        new Person(2,"王五",19,'男')
+                    };
+                    return per;
+                }
+        8. 返回一行数据
+            - HttpGet标注，表示这个是一个Get请求，用于获取数据
+            - ActionResult<xxx>表示返回一个xxx的一个对象
+            - 在操作内实例化xxx对象，并返回实例化后的对象
+            示例：
+                [HttpGet("OneRowGetPerson")]
+                public ActionResult<Person> GetOnePerson()
+                {
+                    Person person = new Person(3, "何七", 34, '女');
+                    return person;
+                }
+
