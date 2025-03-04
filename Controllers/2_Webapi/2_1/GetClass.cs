@@ -24,7 +24,8 @@ namespace _Get_Class
             List<Person> per = new List<Person>()
             {
                 new Person(1,"张三",12,'男'),
-                new Person(2,"王五",19,'男')
+                new Person(2,"王五",19,'男'),
+                new Person(3,"张七",11,'男')
             };
             return per;
         }

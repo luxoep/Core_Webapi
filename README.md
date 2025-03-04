@@ -131,22 +131,12 @@
                             return BadRequest(new { error = "Invalid input" });
                         }
 
-                        // 创建资源的示例
-                        [HttpGet("created")]
-                        public IActionResult CreatedExample()
-                        {
-                            // 创建一个新实体对象
-                            var newEntity = new { Id = 1, Name = "New Entity" };
-                            // 返回 HTTP 状态码 201 Created，并附带新创建资源的 URI 和实体内容
-                            return CreatedAtAction(nameof(GetById), new { id = newEntity.Id }, newEntity);
-                        }
-
                         // 禁止访问的示例
                         [HttpGet("forbidden")]
                         public IActionResult ForbiddenExample()
                         {
                             // 返回 HTTP 状态码 403 Forbidden
-                            return Forbidden();
+                            return StatusCode(403, new { error = "Access is forbidden." });
                         }
 
                         // 自定义状态码的示例
@@ -161,6 +151,9 @@
                         [HttpGet("file")]
                         public IActionResult FileExample()
                         {
+                            // FileContentResult：返回文件二进制内容。
+                            // FileStreamResult：返回文件流。
+                            // PhysicalFileResult：返回物理路径上的文件。
                             // 读取本地文件的内容（假设文件名为 "example.pdf"）
                             byte[] fileContents = System.IO.File.ReadAllBytes("example.pdf");
                             // 返回文件内容，并指定 MIME 类型为 "application/pdf"
@@ -172,6 +165,7 @@
                         public IActionResult RedirectExample()
                         {
                             // 返回 HTTP 状态码 302 Found，并重定向到指定的 URL
+                            // 可用作错误查询数据返回内容
                             return Redirect("https://example.com");
                         }
 
@@ -197,6 +191,22 @@
                         {
                             // 返回 HTTP 状态码 200 OK，并触发用户登出
                             return SignOut();
+                        }
+
+                        // 返回 JSON 格式的响应的示例
+                        [HttpGet("json")]
+                        public IActionResult json()
+                        {
+                            // 返回 JSON 格式的响应内容
+                            var data = new { Message = "Hello, World!" };
+                            return Json(data);
+                        }
+                        // 返回任意内容响应的示例
+                        [HttpGet("any")]
+                        public IActionResult any()
+                        {
+                            // 返回任意内容响应内容
+                            return Content("Hello, World!");
                         }
                     }
 
@@ -511,4 +521,3 @@
                     Person person = new Person(3, "何七", 34, '女');
                     return person;
                 }
-
