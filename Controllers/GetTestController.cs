@@ -188,5 +188,4 @@ public class GetTestController : ControllerBase
 
         return Ok(NewListPerson);
     }
-
 }

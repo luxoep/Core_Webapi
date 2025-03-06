@@ -44,3 +44,5 @@ K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\refint\WebApiCSharp.dll
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\WebApiCSharp.pdb
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\WebApiCSharp.genruntimeconfig.cache
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\ref\WebApiCSharp.dll
+k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\WebApiCSharp.staticwebassets.runtime.json
+k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\Newtonsoft.Json.dll

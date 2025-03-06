@@ -521,3 +521,42 @@
                     Person person = new Person(3, "何七", 34, '女');
                     return person;
                 }
+
+### 2_2_HTTPPost
+
+    1. 在客户端执行Http Post请求时，是将数据放在了Http请求正文中，提交到服务器上
+    2. 而到了Webapi服务器端，从Http请求正文获取数据对象，并通过C#代码实现后续操作
+    3. 使用Http post实现数据的添加功能，并使用Jquery在客户端调用
+
+    启用静态文件（Program.cs）
+        app.UseStaticFiles()
+    使用html页面测试
+        在没有配置跨域的前提下，在同一服务器上是可以自动匹配路径访问到api地址
+    传参方式
+        1.只传递一个参数
+            如果只是传递一个参数可以使用如下方法，需要注意的是该参数的key必须为空，同时后台必须加上[FromBody]标识
+            示例：
+                [HttpPost]
+                public string GetUserInfo([FromBody] string userName)
+                {
+                    return string.Format("名称：{0}", userName);
+                }
+        2.传递多个参数映射到实体类（推荐）
+            如果希望前端参数映射到实体类可以使用如下方法
+            示例：
+                [HttpPost]
+                public string GetUserInfo([FromBody] User user)
+                {
+                    return string.Format("编号：{0}，用户名：{1}，密码：{2}", user.Id, user.UserName, user.Password);
+                }
+        3.利用JObject接收多个参数
+            这种方法比较推荐，无论是一个参数还是多个参数都能使用
+            示例：
+                [HttpPost]
+                public string GetUserInfo([FromBody] JObject obj)
+                {
+                    int id = int.Parse(obj["id"].ToString());
+                    string userName = obj["userName"].ToString();
+                    string password = obj["password"].ToString();
+                    return string.Format("编号：{0}，用户名：{1}，密码：{2}", id, userName, password);
+                }

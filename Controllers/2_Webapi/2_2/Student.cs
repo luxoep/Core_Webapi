@@ -1,13 +1,12 @@
-namespace Person_Class
+namespace Student_Class
 {
-    public class Person
+    public class Student
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int Age { get; set; }
-        public char Gender { get; set; }
-        public Person() { }
-        public Person(int id, string name, int age, char gender)
+        public string Gender { get; set; } = string.Empty;
+        public Student(int id, string name, int age, string gender)
         {
             this.Id = id;
             this.Name = name;
