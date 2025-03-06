@@ -527,6 +527,29 @@
     1. 在客户端执行Http Post请求时，是将数据放在了Http请求正文中，提交到服务器上
     2. 而到了Webapi服务器端，从Http请求正文获取数据对象，并通过C#代码实现后续操作
     3. 使用Http post实现数据的添加功能，并使用Jquery在客户端调用
+    4. POST 请求必须有 Content-Type: application/json，否则 FromBody 可能无法正确解析。
+    5. 如果不加 [FromBody]，默认情况下 ASP.NET Core 可能无法正确解析 JSON。
+    6. 处理大文件上传（如图片、文档）POST 还常用于 文件上传，但 JSON 不能直接传递二进制文件，建议使用 multipart/form-data
+        - 示例：
+          - [HttpPost("Upload")]
+            public async Task<IActionResult> UploadFile(IFormFile file)
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return BadRequest("请选择一个文件");
+                }
+
+                var filePath = Path.Combine("uploads", file.FileName);
+                
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                return Ok(new { Message = "文件上传成功", FileName = file.FileName });
+            }
+
+
 
     启用静态文件（Program.cs）
         app.UseStaticFiles()
@@ -560,3 +583,36 @@
                     string password = obj["password"].ToString();
                     return string.Format("编号：{0}，用户名：{1}，密码：{2}", id, userName, password);
                 }
+    使用 ModelState 进行请求数据校验
+        示例：
+            定义
+                using System.ComponentModel.DataAnnotations;
+                public class UserDto
+                {
+                    [Required(ErrorMessage = "ID 不能为空")]
+                    public int Id { get; set; }
+
+                    [Required(ErrorMessage = "用户名不能为空")]
+                    [StringLength(20, ErrorMessage = "用户名长度不能超过 20 个字符")]
+                    public string UserName { get; set; }
+
+                    [Required(ErrorMessage = "密码不能为空")]
+                    [MinLength(6, ErrorMessage = "密码至少需要 6 个字符")]
+                    public string Password { get; set; }
+                }
+            调用校验
+                [HttpPost("AddUser")]
+                public IActionResult AddUser([FromBody] UserDto user)
+                {
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    return Ok(new { Message = "用户添加成功", UserId = user.Id });
+                }
+    防止 CSRF（跨站请求伪造）
+        builder.Services.AddControllersWithViews(options =>
+        {
+            options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+        });

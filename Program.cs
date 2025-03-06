@@ -12,7 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-    
+// builder.Services.AddControllersWithViews(options =>
+// {
+//     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+// });
 
 #region 用于windows验证登录
 // builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
