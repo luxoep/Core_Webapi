@@ -50,7 +50,33 @@ public class PostTestController : ControllerBase
         }
 
         return BadRequest(new { error = "Invalid input" });
-
     }
 
+    [HttpPost("AddPerson_A")]
+    public IActionResult AddPerson_A([FromBody] Student s)
+    {
+        if (s != null)
+        {
+            _Post post = new _Post();
+            List<Student> newPerson = post.Post_Add_A(s);
+
+            return Ok(newPerson);
+        }
+
+        return BadRequest(new { error = "Invalid input" });
+    }
+
+    [HttpPost("AddPerson_B")]
+    public IActionResult AddPerson_B([FromBody] Student s)
+    {
+        if (s != null)
+        {
+            _Post post = new _Post();
+            Student newPerson = post.Post_Add_B(s);
+
+            return Ok(newPerson);
+        }
+
+        return BadRequest(new { error = "Invalid input" });
+    }
 }

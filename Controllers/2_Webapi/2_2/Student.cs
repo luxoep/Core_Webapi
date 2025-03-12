@@ -12,6 +12,7 @@ namespace Student_Class
         [Required(ErrorMessage = "性别不能为空")]
         [StringLength(1, ErrorMessage = "性别不能超过 1 个字符")]
         public string Gender { get; set; } = string.Empty;
+        public Student() { }
         public Student(int id, string name, int age, string gender)
         {
             this.Id = id;
