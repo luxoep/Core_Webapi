@@ -5,7 +5,7 @@ namespace TeacherSource
     public class TeacherSource_Data
     {
         // 使用成员变量保存数据源
-        private List<Teacher> teacherList = new List<Teacher>()
+        private static List<Teacher> teacherList = new List<Teacher>()
         {
             new Teacher(1, "张老师", 31, "男", "语文老师"),
             new Teacher(2, "王老师", 41, "女", "数学老师"),
@@ -14,28 +14,31 @@ namespace TeacherSource
         };
         public List<Teacher> TeacherList()
         {
-            return teacherList;
+            return new List<Teacher>(teacherList);
+        }
+        public Teacher? Judgmentjudgment(int id)
+        {
+            foreach (Teacher item in teacherList)
+            {
+                if (item.Id == id) return item;
+            }
+            return null;
         }
 
         // 更新数据
-        public Teacher UpdateTeacher(Teacher updatedTeacher)
+        public Teacher? UpdateTeacher(Teacher updatedTeacher)
         {
-            Teacher teacher = null;
+            TeacherSource_Data teacherSource_Data = new TeacherSource_Data();
 
-            List<Teacher> newList = TeacherList();
+            Teacher? teacher = teacherSource_Data.Judgmentjudgment(updatedTeacher.Id);
 
-            foreach (Teacher item in newList)
-            {
-                if (item.Id == updatedTeacher.Id) teacher = item;
-            }
+            if (teacher == null) return null;
 
-            if (teacher != null)
-            {
-                teacher.Name = updatedTeacher.Name;
-                teacher.Age = updatedTeacher.Age;
-                teacher.Gender = updatedTeacher.Gender;
-                teacher.Occupation = updatedTeacher.Occupation;
-            }
+            teacher.Name = updatedTeacher.Name;
+            teacher.Age = updatedTeacher.Age;
+            teacher.Gender = updatedTeacher.Gender;
+            teacher.Occupation = updatedTeacher.Occupation;
+            
             return teacher;
         }
     }

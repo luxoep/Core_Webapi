@@ -15,7 +15,7 @@ public class PutTestController : ControllerBase
     {
         if (teacher == null) return BadRequest(new { error = "Invalid input" });
 
-        Teacher target = teacherdata.UpdateTeacher(teacher);
+        Teacher? target = teacherdata.UpdateTeacher(teacher);
 
         if (target == null) return BadRequest(new { error = "Invalid Data" });
 

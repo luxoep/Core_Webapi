@@ -290,6 +290,14 @@
                   GET /api/mycontroller/search?param1=example
                   GET /api/mycontroller/search?param2=123
         
+    [FromBody] 请求正文
+    [FromForm] 请求正文中的表单数据
+    [FromHeader] 请求标头
+    [FromQuery] 请求查询字符串参数
+    [FromRoute] 当前请求中的路由数据
+    [FromServices] 作为操作参数插入的请求服务
+    [AsParameters] 方法参数
+
 ## WebAPI基础
 
 ### 1-8
@@ -618,6 +626,25 @@
         });
 
 ### 2_2_HTTPPut
+
+    基本PUT
+        public IActionResult UpdateCat(int UUid, [FromBody] Product newCat)
+    表单更新
+        public IActionResult UpdateCat(int UUid, [FromForm] Product newCat)
+    使用查询字符串
+        public IActionResult UpdateCat(int UUid, [FromQuery] string name, [FromQuery] int age)
+    使用路由
+        public IActionResult UpdateCat(int UUid, [FromBody] Product newCat)
+        {
+            ...
+            ReqCat.UUid = uuid;
+            ReqCat.Name = newCat.Name;
+            ...
+        }
+    使用请求标头
+    用依赖注入
+    使用方法参数(直接传递参数)
+        public IActionResult UpdateCat(int UUid, string name, int age)
 
     更新数据使用Put请求
         对于更新操作，可以只更新其中的部分数据，也可以更新整个数据
