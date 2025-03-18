@@ -10,7 +10,7 @@ public class PutTestController : ControllerBase
 {
     public static TeacherSource_Data teacherdata = new TeacherSource_Data();
 
-    [HttpPut("UpdateAll")]
+    [HttpPut("UpdateOnly")]
     public IActionResult UpdateContent([FromBody] Teacher teacher)
     {
         if (teacher == null) return BadRequest(new { error = "Invalid input" });
