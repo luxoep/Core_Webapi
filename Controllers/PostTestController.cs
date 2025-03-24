@@ -32,8 +32,6 @@ public class PostTestController : ControllerBase
 
         return BadRequest(new { error = "未找到新加项目" });
     }
-
-
     [HttpPost("AddPerson")]
     public IActionResult AddPerson([FromBody] Student s)
     {
@@ -51,7 +49,6 @@ public class PostTestController : ControllerBase
 
         return BadRequest(new { error = "Invalid input" });
     }
-
     [HttpPost("AddPerson_A")]
     public IActionResult AddPerson_A([FromBody] Student s)
     {
@@ -65,7 +62,6 @@ public class PostTestController : ControllerBase
 
         return BadRequest(new { error = "Invalid input" });
     }
-
     [HttpPost("AddPerson_B")]
     public IActionResult AddPerson_B([FromBody] Student s)
     {

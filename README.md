@@ -625,7 +625,7 @@
             options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
         });
 
-### 2_2_HTTPPut
+### 2_3_HTTPPut
 
     基本PUT
         public IActionResult UpdateCat(int UUid, [FromBody] Product newCat)
@@ -649,3 +649,27 @@
     更新数据使用Put请求
         对于更新操作，可以只更新其中的部分数据，也可以更新整个数据
         从客户端向服务器传送数据时，是按照JSON对象字符串形式传递的，所以对于不更新的数据，可以传空值，但对象中的属性需要都带上
+
+### 2_4_HTTPDelete
+
+    想要使用wwwroot中文件，则需要在Program.cs中启用静态文件
+        // 启用静态文件
+        app.UseStaticFiles();
+
+    删除方法
+        使用 [HttpDelete] 特性
+            public IActionResult Delete(int id)
+            {
+                // 删除逻辑
+                return Ok();
+            }
+        带有参数的 DELETE 方法
+            [HttpDelete("{id}")]
+            public IActionResult Delete(int id)
+            {
+                // 根据 id 执行删除逻辑
+                return Ok();
+            }
+        使用 [ActionName] 处理重载问题
+        使用原生 SQL 删除
+        使用扩展库（如 Z.EntityFramework.Extensions.EFCore）
