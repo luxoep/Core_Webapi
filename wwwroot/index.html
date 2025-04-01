@@ -12,22 +12,29 @@
     <script type="text/javascript">
         document.getElementById("btn").addEventListener("click", () => {
             const data = {
-                "id": 4,
-                "name": "张七",
-                "age": 49,
-                "gender": "男"
+                "uUid": 3,
+                "name": "BB",
+                "age": 0,
+                "aniamalType": "string",
+                "feature": "string"
             }
+            // {
+            //     "id": 4,
+            //     "name": "张七",
+            //     "age": 49,
+            //     "gender": "男"
+            // }
 
-            fetch("api/PostTest/Add", {
-                method: "POST",
+            fetch("http://localhost:5255/api/Aniamal/GetAllAniamal", {
+                method: "get",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data)
+                // body: JSON.stringify()
             }).then(response => {
-               return response.json();
+                return response.json();
             }).then(data => {
-                console.log(data)
+                console.log(data[0].aniamalType)
             })
         })
 

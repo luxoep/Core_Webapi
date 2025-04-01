@@ -673,3 +673,183 @@
         使用 [ActionName] 处理重载问题
         使用原生 SQL 删除
         使用扩展库（如 Z.EntityFramework.Extensions.EFCore）
+    Delete请求在生产环境中的应用
+        1. REST API （常见：/api/del/123）
+        2. 软删除（数据库标记IsDeleted=true）
+        3. 缓存删除
+    总结：
+     1. 推荐返回状态码204 No Content
+     2. 通常不带请求体，删除多个，建议使用POST/DELETEBATCH
+     3. 最佳实践
+        单个删除：api/del/{id}
+        批量删除：POST /DELETEBATCH
+        软删除：标记IsDeleted=True
+
+### 2_8_HttpHead、HttpOptions、HttpPatch、Http内容协商
+
+#### HttpHead请求，不会返回Http响应正文，只是返回头部信息，也就是响应头的信息
+
+    在 ASP.NET Core 中，[HttpHead] 的使用率最高的几种写法：
+        - 检查资源是否存在：通过返回 200 OK 或 404 Not Found 快速告知客户端资源是否存在。
+          - [HttpHead] 最常见的用途之一。通过 HEAD 请求，客户端可以快速检查资源是否存在，而无需获取完整的资源内容。这种方式节省了带宽和时间，尤其适用于大型资源。
+            代码：
+                [HttpHead("{id}")]
+                public IActionResult CheckResourceExists(int id)
+                {
+                    // 检查资源是否存在
+                    var exists = _dataService.ResourceExists(id);
+                    if (exists)
+                    {
+                        return Ok(); // 返回 200 OK，表示资源存在
+                    }
+                    return NotFound(); // 返回 404 Not Found，表示资源不存在
+                }
+            功能:
+                检查文件是否存在。
+                检查数据库中的记录是否存在。
+                检查用户是否有权限访问某个资源。
+        - 获取资源的元数据：通过设置响应头提供资源的元数据，而无需返回资源内容。
+          - HEAD 请求通常用于获取资源的元数据，例如内容长度、最后修改时间等，而无需下载整个资源。这种方式在性能优化方面非常有用。
+            代码：
+                [HttpHead("{id}")]
+                public IActionResult GetResourceMetadata(int id)
+                {
+                    var resource = _dataService.GetResource(id);
+                    if (resource == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // 设置响应头
+                    Response.Headers["Content-Length"] = resource.Length.ToString();
+                    Response.Headers["Last-Modified"] = resource.LastModified.ToString("R"); // RFC 1123 格式
+
+                    return NoContent(); // 返回 204 No Content，仅包含响应头
+                }
+            功能：
+                获取文件的大小和最后修改时间。
+                获取数据库记录的创建时间和更新时间。
+                提供资源的摘要信息。
+        - 与 [HttpGet] 共享逻辑：避免重复代码，同时支持 GET 和 HEAD 请求。
+        - 性能优化：避免不必要的资源下载，节省带宽和时间。
+          - HEAD 请求的一个重要用途是避免不必要的资源下载。例如，在文件服务器中，客户端可以通过 HEAD 请求检查文件是否存在或是否需要更新，而无需下载整个文件。
+            代码：
+                [HttpHead("{fileName}")]
+                public IActionResult CheckFileExists(string fileName)
+                {
+                    var filePath = Path.Combine(_fileStoragePath, fileName);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        var fileInfo = new FileInfo(filePath);
+                        Response.Headers["Content-Length"] = fileInfo.Length.ToString();
+                        Response.Headers["Last-Modified"] = fileInfo.LastWriteTimeUtc.ToString("R");
+                        return NoContent();
+                    }
+                    return NotFound();
+                }
+            功能：
+                文件服务器中检查文件是否存在。
+                CDN（内容分发网络）中检查资源是否需要更新。
+        - 结合中间件统一处理：对所有资源统一处理 HEAD 请求，提高代码复用性。
+
+#### HttpOptions
+
+    通过HttpOptions请求，客户端可以在采取具体资源请求之前，决定对该资源采取某种必要措施，或者了解服务器性能，对服务器进行预检
+
+    - CORS(跨域中间件)
+        app.UseCors(policy =>
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+    - 手动处理OPTIONS
+        需要自定义OPTIONS响应（比如只允许GET和POST）
+        不使用CORS中间件，但仍然需要支持OPTIONS请求
+        在OPTIONS请求时，返回额外的自定义头部信息
+    - Controller方法
+        [HttpOptions]
+        public IActionResult Options()
+        {
+            Response.Headers.Append("Allow", "POST,OPTIONS");
+            return Ok();
+        }
+        OPTIONS请求不会影响实际的Api访问权限，只是告诉客户端支持哪些HTTP方法，但是不会限制
+
+#### HttpPatch
+
+    PUT用于更新整个资源
+    Patch用于更新部分资源
+        对于Patch请求，数据使用form-data方式发送请求，后台是接收不到参数的
+            使用application/json-patch+json方式的contentType发送
+
+    执行局部更新数据的对象，在使用网页请求时，需要使用固定格式
+        "op" - 定义了你要执行何种操作，例如add, replace, test等。
+        "path" - 定义了你要操作对象属性路径。用前面的Phone类为例，如果你希望修改PhoneName属性，那么你使用的操作路径应该是"/PhoneName"。
+        "value" - 在大部分情况下，这个属性表示你希望在操作中使用的值。
+
+    Add
+        Add操作通常意味着你要向对象中添加属性，或者向数组中添加项目。对于前者，在C#中是没有用的，因为C#是强类型语言，所以不能将属性添加到编译时尚未定义的对象上。
+
+        所以这里如果想往数组中添加项目，PATCH请求的内容应该如下所示。
+        这将在PhoneName数组的索引1处插入一个"iphone12"值。
+        { "op": "add", "path": "/PhoneName/1", "value": "iphone12" }
+        
+        或者你还可以使用"-"在数组尾部插入记录。
+        { "op": "add", "path": "/PhoneName/-", "value": "iphone13" }
+    Remove
+        与Add操作类似，删除操作意味着你希望删除对象中属性，或者从数据中删除某一项。但是因为在C#中你无法移除属性，实际操作时，它会将属性的值变更为default(T)。在某些情况下，如果属性是可空的，则会设置属性值为NULL。但是需要小心，因为当在值类型上使用时，例如int, 则该值实际上会重置为"0"。
+
+        如果要在对象上删除某一属性以达到重置的效果，你可以使用一下命令。
+        { "op": "remove", "path": "/PhoneName"}
+
+        当然你也可以使用删除命令删除数组中的某一项。
+        { "op": "remove", "path": "/PhoneName/1" }
+
+        这将删除数组索引为1的项目。但是有时候使用索引从数组中删除数据是非常危险的，因为这里没有一个"where"条件来控制删除， 有可能在删除的时候，数据库中对应数组已经发生变化了
+    Replace
+        Replace操作和它的字面意思完全一样，可以使用它来替换已有值。针对简单属性，你可以使用如下的命令。
+        { "op": "replace", "path": "/PhoneName", "value": "iphone13" }
+
+        你同样可以使用它来替换数组中的对象。
+        { "op": "replace", "path": "/PhoneName/1", "value": "iphone14" }
+
+        你甚至可以用它来替换整个数组。
+        { "op": "replace", "path": "/PhoneName", "value": ["iphone13", "iphone14"] }
+    Copy
+        Copy操作可以将值从一个路径复制到另一个路径。这个值可以是属性，对象，或者数据。在下面的例子中，我们将PhoneName属性的值复制到了PhoneType属性上。这个命令的使用场景不是很多。
+
+        { "op": "copy", "from": "/PhoneName", "path" : "/PhoneType" }
+    Move
+        Move操作非常类似于Copy操作，但是正如它的字面意思，"from"字段的值将被移除。如果你看一下ASP.NET Core的JSON Patch的底层代码，你会发现，它实际上它会在"from"路径上执行Remove操作，在"path"路径上执行Add操作。
+
+        { "op": "move", "from": "/PhoneName", "path" : "/PhoneType" }
+    Test
+        在当前的ASP.NET Core公开发行版中没有Test操作，但是如果你在Github上查看源代码，你会发现微软已经处理了Test操作。Test操作是一种乐观锁定的方法，或者更简单的说，它会检测数据对象从服务器读取之后，是否发生了更改。
+        我们以如下操作为例。
+        [
+            { "op": "test", "path": "/PhoneName", "value": "苹果手机" }
+            { "op": "replace", "path": "/PhoneName", "value": "小米手机" }
+        ]
+        这个操作首先会检查"/PhoneName"路径的值是否"苹果手机", 如果是，就将它改为"小米手机"。 如果不是，则什么事情都不会发生。这里你需要注意，在一个Test操作的请求体内可以包含多个Test操作，但是如果其中任何一个Test操作验证失败，所以的变更操作都不会被执行。
+
+    JSON Patch的一大优势在于它的请求操作体很小，只发送对象的更改内容。 但是在ASP.NET Core中使用JSON Patch还有另一个很大的好处，就是C＃是一种强类型语言，无法区分是要将模型的值设置为NULL，还是忽略该属性， 而使用JSON Patch可以解决这个问题
+
+#### Http内容协商
+
+    - 在客户端（浏览器），用户会根据与url地址发送一个Http请求到指定的服务器，而在发出的Http请求中，允许携带一些期待服务器返回的请求
+    - 而在服务器端，会根据Http请求中的要求，返回最为合适的资源
+    - 内容协商可以响应的资源有：语言、字符串、编码方式、返回数据的类型等作为判断基准
+    - 当发送一个Http请求时，在请求头中会看到一些以Accept开头的字段，其中包含了用于http内容协商的首部字段
+      - Accept：用于指定预期服务器返回内容的类型，如text/plain、application/json等
+      - Accept-Charset：让服务器指导用户的首选字符集
+      - Accept-Encoding：让服务器指导用户的首选编码
+      - Accept-Language：让服务器知道用户的首选语言
+      - Content-Language：来自服务器，让客户端知道所请求页面上的语言
+    - 内容协商q质量值
+      - 用于表示优先级（0.0-1.0），以上都可以使用q质量值
+    - 内容协商实现方式（通常情况下，我们都是使用服务器端驱动的方案来解决的）
+      - 客户端驱动
+        是指首先在客户端发起一个请求，等待服务器端给出一个可供选择的资源类型的清单。类似于菜单，供客户端选择要哪种资源。客户端选择后，再发送给服务器所需的资源，最后服务器返回客户端想要的最佳资源。
+      - 服务器端驱动
+        是指客户端将内容协商的首部字段集发送给服务器，也就是客户端发送的是自己想要资源的资源清单，而在服务器端接收到这些菜单之后，根据服务器自身的条件和质量值，返回给客户端正确的资源。
+      - 缓存代理
+        是指在客户端和服务器端之间增加一个缓存代理，让这个缓存代理在中间进行协商。
