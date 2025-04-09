@@ -494,6 +494,11 @@
       1. MVC控制器继承的是Controller基类
       2. API控制器继承的是ControllerBase基类
       3. 控制器都是以Controller为结尾
+      4. 多路由支持
+        - 示例：
+            [HttpGet("GetById/{id}")]
+            [HttpGet("{id}")] // 支持 /api/person/3
+            public ActionResult<Person> GetById(int id) { }
     添加操作
         1. 在控制器下面创建的方法叫做操作
         2. 属性路由
@@ -518,7 +523,7 @@
                     };
                     return per;
                 }
-        8. 返回一行数据
+        5. 返回一行数据
             - HttpGet标注，表示这个是一个Get请求，用于获取数据
             - ActionResult<xxx>表示返回一个xxx的一个对象
             - 在操作内实例化xxx对象，并返回实例化后的对象
@@ -529,7 +534,7 @@
                     Person person = new Person(3, "何七", 34, '女');
                     return person;
                 }
-
+        
 ### 2_2_HTTPPost
 
     1. 在客户端执行Http Post请求时，是将数据放在了Http请求正文中，提交到服务器上
@@ -840,9 +845,9 @@
     - 内容协商可以响应的资源有：语言、字符串、编码方式、返回数据的类型等作为判断基准
     - 当发送一个Http请求时，在请求头中会看到一些以Accept开头的字段，其中包含了用于http内容协商的首部字段
       - Accept：用于指定预期服务器返回内容的类型，如text/plain、application/json等
-      - Accept-Charset：让服务器指导用户的首选字符集
-      - Accept-Encoding：让服务器指导用户的首选编码
-      - Accept-Language：让服务器知道用户的首选语言
+      - Accept-Charset：让服务器指导用户的首选字符集（zh-CN、en-US）
+      - Accept-Encoding：让服务器指导用户的首选编码（gizp、br）
+      - Accept-Language：让服务器知道用户的首选语言（utf-8）
       - Content-Language：来自服务器，让客户端知道所请求页面上的语言
     - 内容协商q质量值
       - 用于表示优先级（0.0-1.0），以上都可以使用q质量值

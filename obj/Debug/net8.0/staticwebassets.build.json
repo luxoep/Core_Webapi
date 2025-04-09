@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "9GnFdlyhbxA0/vk8AOUJ9NwdZn97pQfgqYTYydcPsLI=",
+  "Hash": "FKPZzXzt12/0ibDmbJv5MeMsqNdlqkM5vMSpY41AxZY=",
   "Source": "WebApiCSharp",
   "BasePath": "_content/WebApiCSharp",
   "Mode": "Default",
@@ -31,14 +31,59 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "i6a7umumhv",
-      "Integrity": "tnol8Nd4mOuro44WsGv4gzIdB8fbIfXU0OTKePwKobU=",
+      "Fingerprint": "e2abmpn1hb",
+      "Integrity": "tpFrV9k3t5UjIVpcjGvfJybcx7fT7itsnJgRzJd5y3w=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\index.html"
     }
   ],
   "Endpoints": [
+    {
+      "Route": "index.e2abmpn1hb.html",
+      "AssetFile": "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\wwwroot\\index.html",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1197"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/html"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"tpFrV9k3t5UjIVpcjGvfJybcx7fT7itsnJgRzJd5y3w=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 01 Apr 2025 13:42:46 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "e2abmpn1hb"
+        },
+        {
+          "Name": "label",
+          "Value": "index.html"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-tpFrV9k3t5UjIVpcjGvfJybcx7fT7itsnJgRzJd5y3w="
+        }
+      ]
+    },
     {
       "Route": "index.html",
       "AssetFile": "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\wwwroot\\index.html",
@@ -50,7 +95,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1170"
+          "Value": "1197"
         },
         {
           "Name": "Content-Type",
@@ -58,11 +103,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"tnol8Nd4mOuro44WsGv4gzIdB8fbIfXU0OTKePwKobU=\""
+          "Value": "\"tpFrV9k3t5UjIVpcjGvfJybcx7fT7itsnJgRzJd5y3w=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 25 Mar 2025 14:47:54 GMT"
+          "Value": "Tue, 01 Apr 2025 13:42:46 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -72,52 +117,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-tnol8Nd4mOuro44WsGv4gzIdB8fbIfXU0OTKePwKobU="
-        }
-      ]
-    },
-    {
-      "Route": "index.i6a7umumhv.html",
-      "AssetFile": "k:\\CSharp\\CSharpWebapi\\WebApiCSharp\\wwwroot\\index.html",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "1170"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/html"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"tnol8Nd4mOuro44WsGv4gzIdB8fbIfXU0OTKePwKobU=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Tue, 25 Mar 2025 14:47:54 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "i6a7umumhv"
-        },
-        {
-          "Name": "label",
-          "Value": "index.html"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-tnol8Nd4mOuro44WsGv4gzIdB8fbIfXU0OTKePwKobU="
+          "Value": "sha256-tpFrV9k3t5UjIVpcjGvfJybcx7fT7itsnJgRzJd5y3w="
         }
       ]
     }

@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Authentication.Negotiate;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using EngDataSource;
+using EngService;
 using Phone_Data;
 
 
@@ -8,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 让PhoneData变成单例
 builder.Services.AddSingleton<PhoneData>();
+
+// 注册依赖EnginnerData
+builder.Services.AddSingleton<IEngineerService, EngDataSource_Class>();
 
 // Add services to the container.
 // 注册服务AddNewtonsoftJson
