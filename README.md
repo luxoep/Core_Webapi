@@ -858,3 +858,166 @@
         是指客户端将内容协商的首部字段集发送给服务器，也就是客户端发送的是自己想要资源的资源清单，而在服务器端接收到这些菜单之后，根据服务器自身的条件和质量值，返回给客户端正确的资源。
       - 缓存代理
         是指在客户端和服务器端之间增加一个缓存代理，让这个缓存代理在中间进行协商。
+
+## 属性路由
+
+### 属性路由基础
+
+    对于Asp.net Core Web开发，微软提供两种实现路由的方式
+        1. 传统路由：使用统一的路由模板来定义，并应用到所有控制器上
+            - 在Aps.net Core MVC中使用传统路由，在Program中统一配置
+              - 示例：
+                  '''
+                      app.MapControllerRoute(
+                          name:"default",
+                          pattern:"{controller=Home}/{action=Index}/{id}"
+                      )
+                  '''
+            - 在Aps.net Core Webapi中使用属性路由，Program中并没有配置模板
+              - 示例：
+                    '''
+                        app.MapControllers();
+                    '''
+        2. 属性路由：使用属性来定义路由，可以创建出描述资源层次结构的URL
+
+    在Aps.net Core中，属性路由和传统路由使用的相同的路由引擎，也就是内部实现的机制是一样的
+
+    属性路由使用Route()特性来实现
+        [Route{"contomers/{customerld}/order"}]
+            就是在属性路由中定义的路由模板，由三部分组成
+                1. customers表示所有客户，固定名称
+                2. {customerld}表示客户ID值，是一个占位符，可以使用具体的ID值
+                3. order表示当前客户对应的全部订单
+
+        路由控制器模板
+            示例：
+                '''
+                    [ApiController]
+                    [Route("api/[controller]")] // [controller]：作为通配符
+                    public class TestController : ControllerBase
+                    {
+                        [HttpGet("GetStr")] // 使用了Http动词模板
+                        pubilc IActionResult GetStr(){}
+                    }
+                '''
+            访问地址：
+                api/Test/GetStr
+
+### 路由模板
+
+    1. Route属性
+        - 属性路由
+          - 在Route属性内，可以使用[]和{}创建占位符，用于URL路径匹配
+        - Name属性
+          - 用于获取和设置路由名称，通过路由名称来生成URL，而不是直接拼接字符串或依赖于硬编码的URL模式
+            示例：
+                // ValuesController.cs
+                [Route("api/[controller]")]
+                [ApiController]
+                public class ValuesController : ControllerBase
+                {
+                    // 定义一个路由，并设置路由名称为 "GetById"
+                    [HttpGet("{id}", Name = "GetById")]
+                    public IActionResult Get(int id)
+                    {
+                        return Ok($"Value with ID: {id}");
+                    }
+                }
+                // SomeOtherController.cs
+                [Route("api/[controller]")]
+                [ApiController]
+                public class SomeOtherController : ControllerBase
+                {
+                    // 通过路由名称动态生成 URL
+                    [HttpGet]
+                    public IActionResult GetLink()
+                    {
+                        // 使用路由名称 "GetById" 和参数 { id = 123 } 生成 URL
+                        var url = Url.Link("GetById", new { id = 123 });
+                        if (url == null)
+                        {
+                            return NotFound("URL not found");
+                        }
+                        return Ok(url); // 返回生成的 URL
+                    }
+                }
+          - 服务 A 可以通过调用服务 B 的 /api/someother 获取到指向 /api/values/123 的链接，然后根据需要调用该链接
+        - Order属性
+          - Route特性用于获取路由顺序，Order决定路由执行的顺序
+          - 新创建的Route，先有低值开始，当路由没有指定值时，它的默认值是0，Order属性的null值意味着用户名没有为路由指定明确的顺序
+        - Template
+          - 是一个只读的属性
+          - Route特性中的template用于指定路由模板
+    2. 通配符
+        在路由模板中，[]通配符用于替换具体的控制器名称、区域名称和操作名称
+        - {controller} 表示控制器通配符
+        - {area} 表示区域通配符（MVC中可以使用）
+        - {action} 表示操作通配符，定义的请求方法名
+            示例：
+                api/teacher/GetName
+            放置位置1：
+                '''
+                    [ApiController]
+                    [Route("api/[controller]/[action]")]
+                    public class TeacherController : ControllerBase
+                    {
+                        [HttpGet]
+                        public IActionResult GetName()
+                        {
+                            return Ok("你好");
+                        }
+                    }
+                '''
+            放置位置2：
+                '''
+                    [ApiController]
+                    [Route("api/[controller]/[action]")]
+                    public class TeacherController : ControllerBase
+                    {
+                        [HttpGet("[action]")]
+                        public IActionResult GetName()
+                        {
+                            return Ok("你好");
+                        }
+                    }
+
+                '''
+
+        在路由模板中，{}只要用来表示参数值，用于替换具体的参数值
+            示例：api/teacher/getname/1
+                '''
+                    [ApiController]
+                    [Route("api/[controller]/[action]")]
+                    public class TeacherController : ControllerBase
+                    {
+                        [HttpGet("{id}")]
+                        public IActionResult GetName(int id)
+                        {
+                            return Ok("你好"+id);
+                        }
+                    }
+
+                '''
+            可选参数：
+                在路由模板中，还可以使用？指定参数为可选
+                示例：
+                    api/teacher/getname/1
+                    api/teacher/getname
+                    '''
+                        [ApiController]
+                        [Route("api/[controller]/[action]")]
+                        public class TeacherController : ControllerBase
+                        {
+                            [HttpGet("GetMorePar/{id?}")]
+                            public IActionResult GetMorePar(int? id = 3)
+                            {
+                                return Ok(123 + id);
+                            }
+                        }
+                    '''
+
+    3. 默认值
+        在路由模板中，还可以给参数指定一个默认值，与可选参数效果类似，都是在访问时参数为可选
+        可选参数和默认值最大的区别就是在没有指定参数情况下
+            - 可选参数收不到任何值，需要进行判断处理
+            - 默认值会接收到一个预先设置好的值
