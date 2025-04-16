@@ -1021,3 +1021,57 @@
         可选参数和默认值最大的区别就是在没有指定参数情况下
             - 可选参数收不到任何值，需要进行判断处理
             - 默认值会接收到一个预先设置好的值
+
+### Http模板
+
+    Asp.net Core中的Http模板
+        [HttpGet]：指定Get请求，获取数据
+        [HttpPost]：指定Post请求，提交新数据，或者也可以修改数据
+        [HttpPut]：指定Put请求，更新数据
+        [HttpDelete]：指定Delete请求，删除数据
+        [HttpHead]：指定Head请求，获取响应头部信息
+        [HttpPatch]：指定Patch请求，局部更新数据
+
+    对于 Web API 控制器中的操作方法，必须指定一个或多个路由属性，用于接收 HTTP 请求。如果未指定路由属性，则默认使用 HttpGet 方法
+        示例：
+            '''
+                [HttpGet]
+                [HttpGet("GetNotRouteTemp")]
+                [HttpGet("{id}")]
+                public IActionResult GetNotRouteTemp(int id)
+                {
+                    if (id != 0) return Ok(id);
+                    return Ok("Get not route template");
+                }
+            '''
+    如果不想在控制器上使用路由模板，也可以将其放在操作上
+        示例：
+            '''
+                [ApiController]
+                public class NotControllerHttpTemplateController : ControllerBase
+                {
+                    [HttpGet("NotControllerHttpTemplate/GetNotRouteTemp")]
+                    [HttpGet("NotControllerHttpTemplate/{id}")]
+                    public IActionResult GetNotRouteTemp_A(int id)
+                    {
+                        if (id != 0) return Ok(id);
+                        return Ok("Get not route template");
+                    }
+
+                    [HttpGet("GetNotRouteTemp")]
+                    [HttpGet("{id}")]
+                    public IActionResult GetNotRouteTemp_B(int id)
+                    {
+                        if (id != 0) return Ok(id);
+                        return Ok("Get not route template");
+                    }
+
+                }
+            '''
+        如果控制器没有定义 [Route] 属性，操作方法不能直接使用 [HttpGet]，必须在 [HttpGet] 中指定具体的路由路径，否则会导致路由冲突或报错。
+            请求地址分别为
+                - /NotControllerHttpTemplate/GetNotRouteTemp
+                - /NotControllerHttpTemplate/GetNotRouteTemp/1
+            也可以路由设置的更简洁
+                - /GetNotRouteTemp
+                - /1
