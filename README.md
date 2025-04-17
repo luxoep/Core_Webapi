@@ -1075,3 +1075,48 @@
             也可以路由设置的更简洁
                 - /GetNotRouteTemp
                 - /1
+
+### 路由名称
+
+    可以为路由模板指定一个唯一的名称，在同一控制器下，路由名称必须是唯一的
+    路由名称特点
+        1. 不会影响路由的URL匹配
+        2. 仅用于生成URL，这个URL是文本URL字符串
+
+    生成URL地址
+        指定路由名称
+            - 使用Route特性中的name属性，就可以为当前路有模板指定一个名称
+            - 路由名称核心功能就是用于生成URL地址
+
+    LinkGenerator 的几种 Get 方法
+        1. GetPathByAction 用于通过控制器和操作名称生成相对路径
+            参数：
+                action：操作名称（例如 Get）
+                controller：控制器名称（例如 Values）
+                values：路由参数（例如 new { id = 123 }）
+                fragment：URL 的片段部分（例如 #section1）[可选参数]
+        2. GetUriByAction 用于通过控制器和操作名称生成绝对 URL
+            参数：
+                action：操作名称（例如 Get）
+                controller：控制器名称（例如 Values）
+                values：路由参数（例如 new { id = 123 }）
+                scheme：协议（例如 http 或 https）
+                host：主机名（例如 localhost:5001）
+                pathBase：路径基础（例如 /basepath）[可选参数]
+                fragment：URL 的片段部分（例如 #section1）[可选参数]
+        3. GetPathByRouteValues 用于通过路由名称生成相对路径
+            参数：
+                route：路由名称
+                values：路由值
+                pathBase：路径基础（例如 /basepath）[可选参数]
+                fragment：URL 的片段部分（例如 #section1）[可选参数]
+        4. GetUriByRouteValues 用于通过路由名称生成绝对 URL
+            参数：
+                route：路由名称
+                values：路由值
+                scheme：协议（例如 http 或 https）
+                host：主机名（例如 localhost:5001）
+                pathBase：路径基础（例如 /basepath）[可选参数]
+                fragment：URL 的片段部分（例如 #section1）[可选参数]
+
+
