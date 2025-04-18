@@ -11,6 +11,12 @@ builder.Services.AddSingleton<PhoneData>();
 // 注册依赖EnginnerData
 builder.Services.AddSingleton<IEngineerService, EngDataSource_Class>();
 
+// 注册自定义路由约束
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.ConstraintMap.Add("phone", typeof(PhoneNumberRouteConstraint));
+});
+
 // Add services to the container.
 // 注册服务AddNewtonsoftJson
 builder.Services.AddControllers().AddNewtonsoftJson();

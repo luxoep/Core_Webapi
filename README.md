@@ -1119,4 +1119,43 @@
                 pathBase：路径基础（例如 /basepath）[可选参数]
                 fragment：URL 的片段部分（例如 #section1）[可选参数]
 
+### 路由约束
 
+    - 对于属性路由，可以使用Route()和Http()方法指定路由模板，而在路由模板中，还可以使用路由约束对路由参数进行约束，从而保证生成的URL或匹配的URL地址是正确的
+    - 路由约束可以使用类型、函数、正则表达式对等路由中的参数进行限制
+
+    行内约束(Inline Constraint)
+        语法：
+            [HttpGet("GetRoute_A/{id:int}")] 使用类型约束
+                int {id:int} IntRouteConstraint 只允许 int32 整数
+                alpha {id:alpha} AlphaRouteConstraint 只能包含大小写字母
+                bool {id:bool} BoolRouteConstraint 只允许布尔类型
+                datetime {id:datetime} DateTimeRouteConstraint 只允许日期格式
+                decimal {id:decimal} DecimalRouteConstraint 只允许 decimal 类型
+                double {id:double} DoubleRouteConstraint 只允许 double 类型
+                float {id:float} FloatRouteConstraint 只允许 float 类型
+                guid {id:guid} GuidRouteConstraint 只允许 guid 类型
+            [HttpGet("GetRoute_A/{id:max(10)}")] 使用范围约束
+                min(x)：限制参数值必须大于或等于 x
+                max(x)：限制参数值必须小于或等于 x
+                range(x, y)：限制参数值必须在 x 和 y 之间（包括 x 和 y）
+                length(x)：限制参数长度必须等于 x
+                minlength(x)：限制参数长度必须大于或等于 x
+                maxlength(x)：限制参数长度必须小于或等于 x
+            正则表达式约束
+                [HttpGet("{id:regex(^\\d+$)}")]
+                public IActionResult GetById(string id) { ... }
+    自定义路由约束可以通过实现 IRouteConstraint 接口来完成
+        语法：
+            1. 创建一个自定义路由约束类，实现 IRouteConstraint 接口（PhoneNumberRouteConstraint.cs）
+            2. 注册自定义路由约束
+                builder.Services.Configure<RouteOptions>(options =>
+                {
+                    options.ConstraintMap.Add("phone", typeof(PhoneNumberRouteConstraint));
+                });
+            3. 自定义约束来限制路由参数
+                [HttpGet("{phoneNumber:phone}")]
+                public IActionResult GetPhone(string phoneNumber)
+                {
+                    return Ok($"Phone number: {phoneNumber}");
+                }
