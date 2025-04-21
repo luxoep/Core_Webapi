@@ -1159,3 +1159,110 @@
                 {
                     return Ok($"Phone number: {phoneNumber}");
                 }
+
+### 组合路由
+
+    在属性路由中，路由模板不仅可以出现在控制器上，还可以出现在操作上，可以将控制器上的路由模板和操作上的路由模板进行合并
+        1. 操作上有多个模板
+            示例：
+                '''
+                    [HttpGet]
+                    [HttpGet("MoreTemp")]
+                    [HttpGet("MoreTemp/{id}")]
+                    public IActionResult MoreTemp(int id = 0)
+                    {
+                        if (id == 0) return Ok("多模板_A");
+                        return Ok("多模板_B");
+                    }
+                '''
+        2. 控制器和操作上多个模板
+            示例：
+                '''
+                    [ApiController]
+                    [Route("api/[controller]")]
+                    [Route("api/account")]
+                    public class ValuesController : ControllerBase
+                    {
+                        [HttpGet]
+                        [HttpGet("MoreTemp")]
+                        [HttpGet("MoreTemp/{id}")]
+                        public IActionResult MoreTemp(int id = 0)
+                        {
+                            if (id == 0) return Ok("多模板_A");
+                            return Ok("多模板_B");
+                        }
+                    }
+                '''
+            注意控制器和操作上多个模板时，不要使用属性路由的Name属性，Name属性是唯一的
+
+### 自定义路由属性
+
+    使用IRouteTemplateProvider接口实现自定义路由
+        语法：
+            '''
+                public interface IRouteTemplateProvider
+                {
+                    string Name {get;} // 可选，用于路由指定名称
+                    int? Order {get;} // 用于控制多个路由匹配时的优先级，值越小级越高
+                    string Template {get;} // 指定实际路由模板，如 api/[controller]/[action]
+                }
+            '''
+
+    创建自定义路由
+        1. 定义一个自定义类，并继承Attribute接口和IRouteTemplateProvider接口
+            示例：
+                '''
+                    public class MyIRouteTemplateProviderAttribute : Attribute, IRouteTemplateProvider
+                    {
+                        public string? Name { get; set; }
+                        public string? Template
+                        {
+                            get
+                            {
+                                return "My/[controller]";
+                            }
+                        }
+                        public int? Order
+                        {
+                            get
+                            {
+                                return 1;
+                            }
+                        }
+                    }
+                '''
+            调用：
+                '''
+                    [MyIRouteTemplateProvider]
+                    public class WatchController : ControllerBase
+                    {
+                        [HttpGet("Test")]
+                        public IActionResult MyRoute()
+                        {
+                            return Ok("我的路由");
+                        }
+                    }
+                '''
+        2. 自定义属性路由格式
+            自定义路由名 + Attribute : Attribute, IRouteTemplateProvider
+            需要以Attribute结尾，并且继承Attribute接口类和IRouteTemplateProvider接口类
+        3. 通过属性赋值，动态生成自定义路由路径
+            示例：
+                '''
+                    public class MyRouteAttribute : Attribute, IRouteTemplateProvider
+                    {
+                        public string Prefix { get; set; } = "default"; // 通过属性赋值
+
+                        public string Template => $"{Prefix}/[controller]";
+                        public int? Order => 1;
+                        public string Name => null;
+                    }
+
+                    // 使用时
+                    [MyRoute(Prefix = "custom")]
+                    public class DemoController : ControllerBase
+                    {
+                        [HttpGet]
+                        public IActionResult Test() => Ok("Test");
+                    }
+                '''
