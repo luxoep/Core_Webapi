@@ -1,5 +1,8 @@
+using System.Reflection;
 using EngDataSource;
 using EngService;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.OpenApi.Models;
 using Phone_Data;
 
 
@@ -22,7 +25,22 @@ builder.Services.Configure<RouteOptions>(options =>
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(s =>
+{
+    s.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "123",
+        Version = "v1",
+        Description = "A brief description of the API",
+        Contact = new OpenApiContact
+        {
+            Name = "Jerry",
+            Url = new Uri("https://luxoep.github.io/")
+        }
+    });
+    string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 // builder.Services.AddControllersWithViews(options =>
 // {

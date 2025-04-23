@@ -486,7 +486,7 @@
 
             在launchSettings.json中可以配置访问地址等参数
 
-## HTTP资源操作
+## 2_HTTP资源操作
 
 ### 2_1_HTTPGet
 
@@ -859,7 +859,7 @@
       - 缓存代理
         是指在客户端和服务器端之间增加一个缓存代理，让这个缓存代理在中间进行协商。
 
-## 属性路由
+## 3_属性路由
 
 ### 属性路由基础
 
@@ -1266,3 +1266,83 @@
                         public IActionResult Test() => Ok("Test");
                     }
                 '''
+
+## 5_接口管理和测试
+
+### 5_1_Swagger和OpenApi简介
+
+    OpenApi指定为一种规范，Swagger是基于OpenApi规范实现的工具
+        OpenApi的功能是解决调用端（客户端）代码、服务器以及接口文档一致性
+        OpenApi是一个与语言无关的贵伐，用于描述Rest Api
+    官方文档：https://learn.microsoft.com/zh-cn/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-8.0&tabs=visual-studio
+
+### 5_2_Swagger配置
+
+    配置NSwag
+        1. 安装NSwag.AspNetCore包
+        2. 注册NSwag服务（Program.cs）
+            '''
+                var builder = WebApplication.CreateBuilder(args);
+                builder.Services.AddControllers();
+                <!-- 注册NSwag服务 -->
+                builder.Services.AddSwaggerDocument();
+            '''
+        3. 注册中间件（Program.cs）
+            '''
+                app.UseHttpsRedirection();
+                <!-- 启用OpenApi -->
+                app.UseOpenApi();
+                <!-- 启用Swagger UI，版本为3 -->
+                app.app.UseSwaggerUI3();
+            '''
+        
+### 5_4_Swagger自定义文档
+
+    1. 在 Program.cs 中，导入以下命名空间以使用 OpenApiInfo 类
+        using Microsoft.OpenApi.Models;
+    2. 使用 OpenApiInfo 类修改 UI 中显示的信息    
+        示例：
+            '''
+                builder.Services.AddSwaggerGen(options =>
+                {
+                    options.SwaggerDoc("v1", new OpenApiInfo
+                    {
+                        Version = "v1",
+                        Title = "ToDo API",
+                        Description = "An ASP.NET Core Web API for managing ToDo items",
+                        TermsOfService = new Uri("https://example.com/terms"),
+                        Contact = new OpenApiContact // 作者
+                        {
+                            Name = "Example Contact",
+                            Url = new Uri("https://example.com/contact")
+                        },
+                        License = new OpenApiLicense // 许可，版权
+                        {
+                            Name = "Example License",
+                            Url = new Uri("https://example.com/license")
+                        }
+                    });
+                });
+            '''
+
+### 5_6_Swagger显示注释
+
+    1. 在解决方案资源管理器中右键单击该项目，然后选择“Edit <project_name>.csproj”。
+    2. 将 GenerateDocumentationFile 添加到 .csproj 文件
+        示例：
+            '''
+                <PropertyGroup>
+                    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+                    <!-- 在项目文件中忽略的以分号分隔的警告代码列表 -->
+                    <NoWarn>$(NoWarn);1591</NoWarn>
+                </PropertyGroup>
+            '''
+    3. 反射用于生成与 Web API 项目相匹配的 XML 文件名。 AppContext.BaseDirectory属性用于构造 XML 文件的路径。 一些 Swagger 功能（例如，输入参数的架构， 或各自属性中的 HTTP 方法和响应代码）无需使用 XML 文档文件即可起作用。 对于大多数功能（即方法摘要以及参数说明和响应代码说明），必须使用 XML 文件
+        示例：
+            '''
+                builder.Services.AddSwaggerGen(s =>
+                {
+                    string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                });
+            '''

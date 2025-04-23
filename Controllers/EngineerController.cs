@@ -18,12 +18,20 @@ public class EngineerController : ControllerBase
     }
 
     #region Get
+    /// <summary>
+    /// 获取整个Engineer列表
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("GetAllEngineer")]
     public IActionResult GetAllEng()
     {
         return Ok(_engineerService.GetEngineereds());
     }
-
+    /// <summary>
+    /// 查询指定Engineer id
+    /// </summary>
+    /// <param name="id">传入Engineer个人id</param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public IActionResult GetOneEngineer_A(int id)
     {

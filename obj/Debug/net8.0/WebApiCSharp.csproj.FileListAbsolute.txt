@@ -49,3 +49,5 @@ k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\Newtonsoft.Json.dll
 k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
 k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\WebApiCSharp.xml
+k:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\WebApiCSharp.xml

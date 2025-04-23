@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApiCSharp</name>
+    </assembly>
+    <members>
+        <member name="M:WebApiCSharp.Controllers.EngineerController.GetAllEng">
+            <summary>
+            获取整个Engineer列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiCSharp.Controllers.EngineerController.GetOneEngineer_A(System.Int32)">
+            <summary>
+            查询指定Engineer id
+            </summary>
+            <param name="id">传入Engineer个人id</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
