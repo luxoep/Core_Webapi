@@ -38,8 +38,18 @@ builder.Services.AddSwaggerGen(s =>
             Url = new Uri("https://luxoep.github.io/")
         }
     });
-    string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    // string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    // s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 
 // builder.Services.AddControllersWithViews(options =>
@@ -88,16 +98,7 @@ app.UseStaticFiles();
 app.UseAuthorization();
 
 // 允许跨域
-app.UseCors(policy =>
-    policy.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
-
-// API指定允许跨域方式
-// app.UseCors(policy =>
-//     policy.WithOrigins("https://example.com")
-//           .WithMethods("POST", "GET")
-//           .AllowAnyHeader());
+app.UseCors();
 
 app.MapControllers();
 

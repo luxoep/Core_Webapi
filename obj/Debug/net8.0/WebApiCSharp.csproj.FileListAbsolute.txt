@@ -32,12 +32,6 @@ K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\scopedcss\bundle\WebApiCSha
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets.build.json
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets.development.json
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets\msbuild.WebApiCSharp.Microsoft.AspNetCore.StaticWebAssets.props
-K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets\msbuild.WebApiCSharp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets\msbuild.build.WebApiCSharp.props
-K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.WebApiCSharp.props
-K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.WebApiCSharp.props
-K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets.pack.json
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\WebApiCS.CB9AF496.Up2Date
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\WebApiCSharp.dll
 K:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\refint\WebApiCSharp.dll
@@ -51,3 +45,4 @@ k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.Ne
 k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
 k:\CSharp\CSharpWebapi\WebApiCSharp\bin\Debug\net8.0\WebApiCSharp.xml
 k:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\WebApiCSharp.xml
+k:\CSharp\CSharpWebapi\WebApiCSharp\obj\Debug\net8.0\staticwebassets.build.json.cache
