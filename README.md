@@ -4,7 +4,7 @@
 
     IActionResult 是一个接口，提供了更高的灵活性，允许返回多种类型的响应。
     ActionResult<T> 是一个泛型类，继承自 IActionResult，提供了类型安全和更明确的返回类型。
-
+    
     ActionResult类：
         示例：
             // 定义一个 Web API 控制器，使用 [ApiController] 特性标记为 API 控制器
@@ -20,7 +20,7 @@
                     // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
                     return Ok(new { message = "Request succeeded" });
                 }
-
+    
                 // 未找到资源的示例
                 [HttpGet("not-found")]
                 public ActionResult NotFoundExample()
@@ -28,7 +28,7 @@
                     // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
                     return NotFound(new { error = "Resource not found" });
                 }
-
+    
                 // 请求无效的示例
                 [HttpGet("bad-request")]
                 public ActionResult BadRequestExample()
@@ -36,7 +36,7 @@
                     // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
                     return BadRequest(new { error = "Invalid input" });
                 }
-
+    
                 // 创建资源的示例
                 [HttpGet("created")]
                 public ActionResult CreatedExample()
@@ -47,7 +47,7 @@
                     // 使用 CreatedAtAction 方法生成指向新资源的 URI
                     return CreatedAtAction(nameof(GetById), new { id = newEntity.Id }, newEntity);
                 }
-
+    
                 // 禁止访问的示例
                 [HttpGet("forbidden")]
                 public ActionResult ForbiddenExample()
@@ -55,7 +55,7 @@
                     // 返回 HTTP 状态码 403 Forbidden
                     return Forbidden();
                 }
-
+    
                 // 自定义状态码的示例
                 [HttpGet("custom-status")]
                 public ActionResult CustomStatus()
@@ -63,7 +63,7 @@
                     // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
                     return StatusCode(503, new { error = "Service Unavailable" });
                 }
-
+    
                 // 返回文件的示例
                 [HttpGet("file")]
                 public ActionResult FileExample()
@@ -73,7 +73,7 @@
                     // 返回文件内容，并指定 MIME 类型为 "application/pdf"
                     return File(fileContents, "application/pdf");
                 }
-
+    
                 // 重定向的示例
                 [HttpGet("redirect")]
                 public ActionResult RedirectExample()
@@ -82,7 +82,7 @@
                     // 注意：URL 应该是一个有效的地址
                     return Redirect("https://example.com");
                 }
-
+    
                 // 返回问题详情的示例
                 [HttpGet("problem")]
                 public ActionResult ProblemExample()
@@ -106,7 +106,7 @@
                             new Person { Id = 1, Name = "张三", Age = 12, Gender = "男" },
                             new Person { Id = 2, Name = "王五", Age = 19, Gender = "男" }
                         };
-
+    
                         // 成功响应示例
                         [HttpGet("success")]
                         public IActionResult Success()
@@ -114,7 +114,7 @@
                             // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
                             return Ok(new { message = "Request succeeded" });
                         }
-
+    
                         // 未找到资源的示例
                         [HttpGet("not-found")]
                         public IActionResult NotFoundExample()
@@ -122,7 +122,7 @@
                             // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
                             return NotFound(new { error = "Resource not found" });
                         }
-
+    
                         // 请求无效的示例
                         [HttpGet("bad-request")]
                         public IActionResult BadRequestExample()
@@ -130,7 +130,7 @@
                             // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
                             return BadRequest(new { error = "Invalid input" });
                         }
-
+    
                         // 禁止访问的示例
                         [HttpGet("forbidden")]
                         public IActionResult ForbiddenExample()
@@ -138,7 +138,7 @@
                             // 返回 HTTP 状态码 403 Forbidden
                             return StatusCode(403, new { error = "Access is forbidden." });
                         }
-
+    
                         // 自定义状态码的示例
                         [HttpGet("custom-status")]
                         public IActionResult CustomStatus()
@@ -146,7 +146,7 @@
                             // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
                             return StatusCode(503, new { error = "Service Unavailable" });
                         }
-
+    
                         // 返回文件的示例
                         [HttpGet("file")]
                         public IActionResult FileExample()
@@ -159,7 +159,7 @@
                             // 返回文件内容，并指定 MIME 类型为 "application/pdf"
                             return File(fileContents, "application/pdf");
                         }
-
+    
                         // 重定向的示例
                         [HttpGet("redirect")]
                         public IActionResult RedirectExample()
@@ -168,7 +168,7 @@
                             // 可用作错误查询数据返回内容
                             return Redirect("https://example.com");
                         }
-
+    
                         // 返回问题详情的示例
                         [HttpGet("problem")]
                         public IActionResult ProblemExample()
@@ -176,7 +176,7 @@
                             // 返回 HTTP 状态码 500 Internal Server Error，并附带详细的错误信息
                             return Problem(detail: "An error occurred", statusCode: 500);
                         }
-
+    
                         // 返回挑战响应的示例（通常用于身份验证）
                         [HttpGet("challenge")]
                         public IActionResult ChallengeExample()
@@ -184,7 +184,7 @@
                             // 返回 HTTP 状态码 401 Unauthorized，并触发身份验证挑战
                             return Challenge();
                         }
-
+    
                         // 返回登出响应的示例
                         [HttpGet("signout")]
                         public IActionResult SignOutExample()
@@ -192,7 +192,7 @@
                             // 返回 HTTP 状态码 200 OK，并触发用户登出
                             return SignOut();
                         }
-
+    
                         // 返回 JSON 格式的响应的示例
                         [HttpGet("json")]
                         public IActionResult json()
@@ -209,7 +209,7 @@
                             return Content("Hello, World!");
                         }
                     }
-
+    
                     // 定义 Person 类
                     public class Person
                     {
@@ -270,7 +270,7 @@
                       public string Param1 { get; set; }
                       public int Param2 { get; set; }
                   }
-
+    
                   [HttpGet("search")]
                   public IActionResult Search([FromQuery] SearchParams params)
                   {
@@ -289,7 +289,7 @@
                   GET /api/mycontroller/search
                   GET /api/mycontroller/search?param1=example
                   GET /api/mycontroller/search?param2=123
-        
+    
     [FromBody] 请求正文
     [FromForm] 请求正文中的表单数据
     [FromHeader] 请求标头
@@ -483,7 +483,7 @@
         Route特性
             1.对于API控制器，如果使用了[ApiController]属性，则要求必须使用特性路由来匹配请求的URL。
             2.特性路由也称为属性路由，是指直接在控制器上使用[Route]特性指定路由模板实现URL匹配。
-
+    
             在launchSettings.json中可以配置访问地址等参数
 
 ## 2_HTTP资源操作
@@ -534,7 +534,7 @@
                     Person person = new Person(3, "何七", 34, '女');
                     return person;
                 }
-        
+
 ### 2_2_HTTPPost
 
     1. 在客户端执行Http Post请求时，是将数据放在了Http请求正文中，提交到服务器上
@@ -551,19 +551,19 @@
                 {
                     return BadRequest("请选择一个文件");
                 }
-
+    
                 var filePath = Path.Combine("uploads", file.FileName);
-                
+    
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
-
+    
                 return Ok(new { Message = "文件上传成功", FileName = file.FileName });
             }
-
-
-
+    
+    
+    
     启用静态文件（Program.cs）
         app.UseStaticFiles()
     使用html页面测试
@@ -604,11 +604,11 @@
                 {
                     [Required(ErrorMessage = "ID 不能为空")]
                     public int Id { get; set; }
-
+    
                     [Required(ErrorMessage = "用户名不能为空")]
                     [StringLength(20, ErrorMessage = "用户名长度不能超过 20 个字符")]
                     public string UserName { get; set; }
-
+    
                     [Required(ErrorMessage = "密码不能为空")]
                     [MinLength(6, ErrorMessage = "密码至少需要 6 个字符")]
                     public string Password { get; set; }
@@ -621,7 +621,7 @@
                     {
                         return BadRequest(ModelState);
                     }
-
+    
                     return Ok(new { Message = "用户添加成功", UserId = user.Id });
                 }
     防止 CSRF（跨站请求伪造）
@@ -650,7 +650,7 @@
     用依赖注入
     使用方法参数(直接传递参数)
         public IActionResult UpdateCat(int UUid, string name, int age)
-
+    
     更新数据使用Put请求
         对于更新操作，可以只更新其中的部分数据，也可以更新整个数据
         从客户端向服务器传送数据时，是按照JSON对象字符串形式传递的，所以对于不更新的数据，可以传空值，但对象中的属性需要都带上
@@ -660,7 +660,7 @@
     想要使用wwwroot中文件，则需要在Program.cs中启用静态文件
         // 启用静态文件
         app.UseStaticFiles();
-
+    
     删除方法
         使用 [HttpDelete] 特性
             public IActionResult Delete(int id)
@@ -724,11 +724,11 @@
                     {
                         return NotFound();
                     }
-
+    
                     // 设置响应头
                     Response.Headers["Content-Length"] = resource.Length.ToString();
                     Response.Headers["Last-Modified"] = resource.LastModified.ToString("R"); // RFC 1123 格式
-
+    
                     return NoContent(); // 返回 204 No Content，仅包含响应头
                 }
             功能：
@@ -760,7 +760,7 @@
 #### HttpOptions
 
     通过HttpOptions请求，客户端可以在采取具体资源请求之前，决定对该资源采取某种必要措施，或者了解服务器性能，对服务器进行预检
-
+    
     - CORS(跨域中间件)
         app.UseCors(policy =>
             policy.AllowAnyOrigin()
@@ -785,47 +785,47 @@
     Patch用于更新部分资源
         对于Patch请求，数据使用form-data方式发送请求，后台是接收不到参数的
             使用application/json-patch+json方式的contentType发送
-
+    
     执行局部更新数据的对象，在使用网页请求时，需要使用固定格式
         "op" - 定义了你要执行何种操作，例如add, replace, test等。
         "path" - 定义了你要操作对象属性路径。用前面的Phone类为例，如果你希望修改PhoneName属性，那么你使用的操作路径应该是"/PhoneName"。
         "value" - 在大部分情况下，这个属性表示你希望在操作中使用的值。
-
+    
     Add
         Add操作通常意味着你要向对象中添加属性，或者向数组中添加项目。对于前者，在C#中是没有用的，因为C#是强类型语言，所以不能将属性添加到编译时尚未定义的对象上。
-
+    
         所以这里如果想往数组中添加项目，PATCH请求的内容应该如下所示。
         这将在PhoneName数组的索引1处插入一个"iphone12"值。
         { "op": "add", "path": "/PhoneName/1", "value": "iphone12" }
-        
+    
         或者你还可以使用"-"在数组尾部插入记录。
         { "op": "add", "path": "/PhoneName/-", "value": "iphone13" }
     Remove
         与Add操作类似，删除操作意味着你希望删除对象中属性，或者从数据中删除某一项。但是因为在C#中你无法移除属性，实际操作时，它会将属性的值变更为default(T)。在某些情况下，如果属性是可空的，则会设置属性值为NULL。但是需要小心，因为当在值类型上使用时，例如int, 则该值实际上会重置为"0"。
-
+    
         如果要在对象上删除某一属性以达到重置的效果，你可以使用一下命令。
         { "op": "remove", "path": "/PhoneName"}
-
+    
         当然你也可以使用删除命令删除数组中的某一项。
         { "op": "remove", "path": "/PhoneName/1" }
-
+    
         这将删除数组索引为1的项目。但是有时候使用索引从数组中删除数据是非常危险的，因为这里没有一个"where"条件来控制删除， 有可能在删除的时候，数据库中对应数组已经发生变化了
     Replace
         Replace操作和它的字面意思完全一样，可以使用它来替换已有值。针对简单属性，你可以使用如下的命令。
         { "op": "replace", "path": "/PhoneName", "value": "iphone13" }
-
+    
         你同样可以使用它来替换数组中的对象。
         { "op": "replace", "path": "/PhoneName/1", "value": "iphone14" }
-
+    
         你甚至可以用它来替换整个数组。
         { "op": "replace", "path": "/PhoneName", "value": ["iphone13", "iphone14"] }
     Copy
         Copy操作可以将值从一个路径复制到另一个路径。这个值可以是属性，对象，或者数据。在下面的例子中，我们将PhoneName属性的值复制到了PhoneType属性上。这个命令的使用场景不是很多。
-
+    
         { "op": "copy", "from": "/PhoneName", "path" : "/PhoneType" }
     Move
         Move操作非常类似于Copy操作，但是正如它的字面意思，"from"字段的值将被移除。如果你看一下ASP.NET Core的JSON Patch的底层代码，你会发现，它实际上它会在"from"路径上执行Remove操作，在"path"路径上执行Add操作。
-
+    
         { "op": "move", "from": "/PhoneName", "path" : "/PhoneType" }
     Test
         在当前的ASP.NET Core公开发行版中没有Test操作，但是如果你在Github上查看源代码，你会发现微软已经处理了Test操作。Test操作是一种乐观锁定的方法，或者更简单的说，它会检测数据对象从服务器读取之后，是否发生了更改。
@@ -835,7 +835,7 @@
             { "op": "replace", "path": "/PhoneName", "value": "小米手机" }
         ]
         这个操作首先会检查"/PhoneName"路径的值是否"苹果手机", 如果是，就将它改为"小米手机"。 如果不是，则什么事情都不会发生。这里你需要注意，在一个Test操作的请求体内可以包含多个Test操作，但是如果其中任何一个Test操作验证失败，所以的变更操作都不会被执行。
-
+    
     JSON Patch的一大优势在于它的请求操作体很小，只发送对象的更改内容。 但是在ASP.NET Core中使用JSON Patch还有另一个很大的好处，就是C＃是一种强类型语言，无法区分是要将模型的值设置为NULL，还是忽略该属性， 而使用JSON Patch可以解决这个问题
 
 #### Http内容协商
@@ -879,16 +879,16 @@
                         app.MapControllers();
                     '''
         2. 属性路由：使用属性来定义路由，可以创建出描述资源层次结构的URL
-
+    
     在Aps.net Core中，属性路由和传统路由使用的相同的路由引擎，也就是内部实现的机制是一样的
-
+    
     属性路由使用Route()特性来实现
         [Route{"contomers/{customerld}/order"}]
             就是在属性路由中定义的路由模板，由三部分组成
                 1. customers表示所有客户，固定名称
                 2. {customerld}表示客户ID值，是一个占位符，可以使用具体的ID值
                 3. order表示当前客户对应的全部订单
-
+    
         路由控制器模板
             示例：
                 '''
@@ -980,9 +980,9 @@
                             return Ok("你好");
                         }
                     }
-
+    
                 '''
-
+    
         在路由模板中，{}只要用来表示参数值，用于替换具体的参数值
             示例：api/teacher/getname/1
                 '''
@@ -996,7 +996,7 @@
                             return Ok("你好"+id);
                         }
                     }
-
+    
                 '''
             可选参数：
                 在路由模板中，还可以使用？指定参数为可选
@@ -1015,7 +1015,7 @@
                             }
                         }
                     '''
-
+    
     3. 默认值
         在路由模板中，还可以给参数指定一个默认值，与可选参数效果类似，都是在访问时参数为可选
         可选参数和默认值最大的区别就是在没有指定参数情况下
@@ -1031,7 +1031,7 @@
         [HttpDelete]：指定Delete请求，删除数据
         [HttpHead]：指定Head请求，获取响应头部信息
         [HttpPatch]：指定Patch请求，局部更新数据
-
+    
     对于 Web API 控制器中的操作方法，必须指定一个或多个路由属性，用于接收 HTTP 请求。如果未指定路由属性，则默认使用 HttpGet 方法
         示例：
             '''
@@ -1057,7 +1057,7 @@
                         if (id != 0) return Ok(id);
                         return Ok("Get not route template");
                     }
-
+    
                     [HttpGet("GetNotRouteTemp")]
                     [HttpGet("{id}")]
                     public IActionResult GetNotRouteTemp_B(int id)
@@ -1065,7 +1065,7 @@
                         if (id != 0) return Ok(id);
                         return Ok("Get not route template");
                     }
-
+    
                 }
             '''
         如果控制器没有定义 [Route] 属性，操作方法不能直接使用 [HttpGet]，必须在 [HttpGet] 中指定具体的路由路径，否则会导致路由冲突或报错。
@@ -1082,12 +1082,12 @@
     路由名称特点
         1. 不会影响路由的URL匹配
         2. 仅用于生成URL，这个URL是文本URL字符串
-
+    
     生成URL地址
         指定路由名称
             - 使用Route特性中的name属性，就可以为当前路有模板指定一个名称
             - 路由名称核心功能就是用于生成URL地址
-
+    
     LinkGenerator 的几种 Get 方法
         1. GetPathByAction 用于通过控制器和操作名称生成相对路径
             参数：
@@ -1123,7 +1123,7 @@
 
     - 对于属性路由，可以使用Route()和Http()方法指定路由模板，而在路由模板中，还可以使用路由约束对路由参数进行约束，从而保证生成的URL或匹配的URL地址是正确的
     - 路由约束可以使用类型、函数、正则表达式对等路由中的参数进行限制
-
+    
     行内约束(Inline Constraint)
         语法：
             [HttpGet("GetRoute_A/{id:int}")] 使用类型约束
@@ -1207,7 +1207,7 @@
                     string Template {get;} // 指定实际路由模板，如 api/[controller]/[action]
                 }
             '''
-
+    
     创建自定义路由
         1. 定义一个自定义类，并继承Attribute接口和IRouteTemplateProvider接口
             示例：
@@ -1252,12 +1252,12 @@
                     public class MyRouteAttribute : Attribute, IRouteTemplateProvider
                     {
                         public string Prefix { get; set; } = "default"; // 通过属性赋值
-
+    
                         public string Template => $"{Prefix}/[controller]";
                         public int? Order => 1;
                         public string Name => null;
                     }
-
+    
                     // 使用时
                     [MyRoute(Prefix = "custom")]
                     public class DemoController : ControllerBase
@@ -1295,7 +1295,7 @@
                 <!-- 启用Swagger UI，版本为3 -->
                 app.app.UseSwaggerUI3();
             '''
-        
+
 ### 5_4_Swagger自定义文档
 
     1. 在 Program.cs 中，导入以下命名空间以使用 OpenApiInfo 类
@@ -1344,5 +1344,229 @@
                 {
                     string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                     s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                });
+            '''
+
+## 6_1_Cors跨域
+
+    1. 只要是使用浏览器（js代码），请求服务器上的Webapi、WebServices等，都会出现跨域问题
+    2. 浏览器的安全功能就是同源策略，同源策略就是在用一个域内实现访问（相同的协议、域名、端口号）
+    3. 默认情况下存在跨域的URL是不能访问的，但是对于资源服务器，是可以配置跨域设置，从而使客户端访问到服务器上的资源
+
+    多种解决跨域方式：
+        - 使用document.domain访问另一个URL的Cookie
+        - 使用JSONP（只支持GET请求）
+        - 使用CORS解决快于Ajax/Axios请求
+
+    同源策略（Same Origin Policy, SOP）
+        要求页面发起的请求，协议、域名、端口号必须完全一致，否则就是跨域
+
+    | 方式                         | 说明                                              | 特点                                             | 适用场景                   |
+    | :--------------------------- | :------------------------------------------------ | :----------------------------------------------- | :------------------------- |
+    | `document.domain`            | 设置相同的 `document.domain` 允许子域页面通信     | 仅适用于同一主域名，不适用于跨主域               | iframe 中不同子域之间通信  |
+    | `JSONP`                      | 利用 `<script>` 标签可跨域加载的特性进行GET请求   | 只支持GET请求，存在安全隐患，不能发送复杂请求    | 读取简单数据，如第三方接口 |
+    | `CORS` (跨域资源共享)        | 服务器通过响应头允许跨域访问资源                  | 支持各种HTTP方法，是最标准的跨域解决方案         | 前后端分离项目，常用       |
+    | `服务器代理` (Reverse Proxy) | 通过服务器中转请求，绕开浏览器的同源限制          | 安全性高，对前端透明，部署复杂度稍高             | 生产环境常用，API请求代理  |
+    | `postMessage`                | 不同源窗口或iframe之间安全通信的机制              | 支持跨主域、跨协议传输数据，需要自己管理消息监听 | OAuth认证、iframe嵌套通信  |
+    | `WebSocket`                  | WebSocket协议不受同源策略限制                     | 适合实时双向通信，不适合普通HTTP请求场景         | 实时推送、聊天应用         |
+    | `window.name`                | 通过页面跳转后仍然保留 `window.name` 属性传递数据 | 容量大（可存2MB数据），实现复杂，兼容性有限      | 特殊跨域数据传递需求       |
+
+### 6_3_命名策略跨域(推荐使用)
+
+    1. 注册Cors服务（指定URL和请求方式）
+        '''
+            builder.Services.AddCors(options =>
+            {
+                <!-- cors就是命名策略名称 -->
+                options.AddPolicy("cors", builder =>
+                {
+                    builder.WithOrigins("http://127.0.0.1:5500")
+                        .WithMethods()
+                        .AllowAnyHeader();
+                });
+            });
+        '''
+    2. 启用跨域（全局跨域）
+        '''
+            app.UseHttpsRedirection();
+
+            // 启用中间件跨域
+            app.UseCors("cors");
+        '''
+    3. 设置发布后的URL地址
+        '''
+            app.Urls.Add("https://*:6001");
+        '''
+    补充：
+        配置多个跨域策略
+            语法：
+                '''
+                    // 配置跨域（指定请求URL）
+                    builder.Services.AddCors(options =>
+                    {
+                        options.AddPolicy("cors", builder =>
+                        {
+                            builder.WithOrigins("http://127.0.0.1:5500")
+                                .WithMethods()
+                                .AllowAnyHeader();
+                        });
+                        options.AddPolicy("cors_Backup", builder =>
+                        {
+                            builder.WithOrigins("http://127.0.0.1:5500")
+                                .WithMethods()
+                                .AllowAnyHeader();
+                        });
+                    });
+                '''
+
+### 6_4_终结点跨域(.net6以上不被推荐)
+
+    在命名策略的基础上使用终结点路由来实现更精细的跨域（启用Cors）
+    对于Asp.net Core中，webapi终结点配置注意点：
+        1. 默认没有路由中间件，若需要使用终结点配置跨域，则需要添加路由中间件app.UseRouting()
+        2. 注释掉app.MapControllers()
+        3. 必须将app.UseCors()放在app.UseRouting()的下面，app.Endpoints()上面
+        语法：
+            '''
+                <!-- 路由中间件 -->
+                app.UseRouting();
+                <!-- 授权中间件 -->
+                app.UseAuthorization();
+                <!-- Cors中间件 -->
+                app.UseCors("cors");
+                // 配置终结点
+                app.UseEndpoints(end =>
+                {
+                    end.MapControllers()
+                        .RequireCors("Cors");
+                });
+            '''
+
+### 6_5_属性跨域（部分跨域）
+
+    在Asp.net Core中，可以使用 [EnableCors()]  属性启用跨域，并将命名策略应用到需要跨域的Api上
+        [EnableCors()]  属性要配合命名策略和默认策略一起使用
+    
+    [EnableCors()] 语法：
+        [EnableCors()] 表示使用默认策略，如果没有配置默认策略，直接使用 [EnableCors()] 会导致运行时错误
+        [EnableCors("策略名称（cors）")] 表示使用命名策略
+
+    在使用 [EnableCors()] 时需要使用无参数的UseCors()，将策略转到控制器和操作去配置
+        语法：
+            '''
+                app.UseCors();
+
+                app.UseAuthorization();
+
+                app.MapControllers();
+            '''
+    在Api中使用[EnableCors()]
+        语法一（在主控制器上使用）：
+            '''
+                [EnableCors("cors")]
+                [ApiController]
+                [Route("api/[controller]")]
+                public class UsersController : ControllerBase{}
+            '''
+        语法二（在操作上使用）：
+            '''
+                [EnableCors("cors")]
+                [HttpGet("GetUsersAll")]
+                public IActionResult GetUsersAll(){}
+            '''
+    [DisableCors()]属性
+        1. 可以禁用Cors
+        2. 但是 [DisableCors()] 不会禁用已经使用终结点路由启用的跨域（cors）
+        3. 在控制器上使用 [EnableCors()] ，如果控制器下某个操作不想使用跨域，则可以使禁用掉
+        4. 如果在全局启用了跨域，[DisableCors()] 可以禁用特定控制器或操作的跨域
+            示例：
+                '''
+                    [DisableCors]
+                    [ApiController]
+                    [Route("api/[controller]")]
+                    public class SecureController : ControllerBase
+                    {
+                        [HttpGet]
+                        public IActionResult GetSecureData()
+                        {
+                            return Ok("This data is not accessible via CORS");
+                        }
+                    }
+                '''
+
+    在Asp.net中，对于限制Cors请求的最佳控制是 [EnableCors("策略名称（cors）")] 与命名策略一起使用，不推荐使用默认策略
+
+### 6_6_默认策略跨域
+
+    使用默认策略跨域 app.UseCors() 中不需要传值
+
+    语法：
+        '''
+            // 默认策略
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://127.0.0.1:5500")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+
+            app.UseCors();
+        '''
+    调用：
+        '''
+            [EnableCors()] // 可选
+            [HttpGet("GetUsersAll")]
+            public IActionResult GetUsersAll(){}
+        '''
+
+    使用默认策略可以让指定客户端URL地址访问api服务器所有控制器上的操作
+    启用默认策略的针对整个api资源的跨域，不能将跨域灵活的下放到终结点、控制器、操作上
+
+### 6_7_Cors策略选项
+
+    Cors策略选项可以设置功能（在AddPolict中设置）：
+        1. 设置允许来源
+            - AllowAnyOrigin 允许任何访问来源
+            - WithOrigins 设置指定来源，类型为string[]
+            - SetIsOriginAllowedToAllowWildcardSubdomains 允许来源匹配设置通配符url
+                语法：
+                    '''
+                        options.AddPolicy("cors", builder =>
+                        {
+                            builder.WithOrigins("http://*:5500")
+                                .SetIsOriginAllowedToAllowWildcardSubdomains()
+                                .WithMethods()
+                                .AllowAnyHeader();
+                        });
+                    '''
+        2. 设置允许HTTP的方法
+            - AllowAnyMethod 允许所有请求方式
+            - WithMethods 指定允许的请求方式
+        3. 设置允许的请求标头
+            - WithHeaders 设置指定请求头
+            - AllowAnyHeader 允许所有请求头
+            - WithExposedHeaders 设置自定义头
+        4. 设置公开的响应头
+            - WithExposedHeaders("X-Custom-Header", "X-Auth-Token")
+        5. 跨域请求中的凭据
+            - Cors默认不发送Cookie和HTTP认证信息
+              - 服务端设置：Access-Control-Allow-Credential:"True"
+              - 客服端设置：WithCredentials:"True"
+        6. 设置预检过期时间
+            - SetPreflightMaxAge(TimeSpan.FromMinutes(10)) 表示浏览器可以缓存预检结果 10 分钟，不必每次请求都预检
+
+        完整配置：
+            '''
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy("Default", policy =>
+                    {
+                        policy.WithOrigins("http://127.0.0.1:5500")
+                            .WithMethods("GET", "POST")
+                            .WithHeaders("content-type")
+                            .WithExposedHeaders("X-Token")
+                            .SetPreflightMaxAge(TimeSpan.FromMinutes(5))
+                            .AllowCredentials();
+                    });
                 });
             '''
