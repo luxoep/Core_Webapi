@@ -7,218 +7,224 @@
     
     ActionResult类：
         示例：
-            // 定义一个 Web API 控制器，使用 [ApiController] 特性标记为 API 控制器
-            // 路由路径为 "api/[controller]"，即控制器名称对应的 API 路径
-            [ApiController]
-            [Route("api/[controller]")]
-            public class MyController : ControllerBase
-            {
-                // 成功响应示例
-                [HttpGet("success")]
-                public ActionResult Success()
+
+            ```csharp
+                // 定义一个 Web API 控制器，使用 [ApiController] 特性标记为 API 控制器
+                // 路由路径为 "api/[controller]"，即控制器名称对应的 API 路径
+                [ApiController]
+                [Route("api/[controller]")]
+                public class MyController : ControllerBase
                 {
-                    // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
-                    return Ok(new { message = "Request succeeded" });
+                    // 成功响应示例
+                    [HttpGet("success")]
+                    public ActionResult Success()
+                    {
+                        // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
+                        return Ok(new { message = "Request succeeded" });
+                    }
+        
+                    // 未找到资源的示例
+                    [HttpGet("not-found")]
+                    public ActionResult NotFoundExample()
+                    {
+                        // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
+                        return NotFound(new { error = "Resource not found" });
+                    }
+        
+                    // 请求无效的示例
+                    [HttpGet("bad-request")]
+                    public ActionResult BadRequestExample()
+                    {
+                        // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
+                        return BadRequest(new { error = "Invalid input" });
+                    }
+        
+                    // 创建资源的示例
+                    [HttpGet("created")]
+                    public ActionResult CreatedExample()
+                    {
+                        // 创建一个新实体对象
+                        var newEntity = new { Id = 1, Name = "New Entity" };
+                        // 返回 HTTP 状态码 201 Created，并附带新创建资源的 URI 和实体内容
+                        // 使用 CreatedAtAction 方法生成指向新资源的 URI
+                        return CreatedAtAction(nameof(GetById), new { id = newEntity.Id }, newEntity);
+                    }
+        
+                    // 禁止访问的示例
+                    [HttpGet("forbidden")]
+                    public ActionResult ForbiddenExample()
+                    {
+                        // 返回 HTTP 状态码 403 Forbidden
+                        return Forbidden();
+                    }
+        
+                    // 自定义状态码的示例
+                    [HttpGet("custom-status")]
+                    public ActionResult CustomStatus()
+                    {
+                        // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
+                        return StatusCode(503, new { error = "Service Unavailable" });
+                    }
+        
+                    // 返回文件的示例
+                    [HttpGet("file")]
+                    public ActionResult FileExample()
+                    {
+                        // 读取本地文件的内容（假设文件名为 "example.pdf"）
+                        byte[] fileContents = System.IO.File.ReadAllBytes("example.pdf");
+                        // 返回文件内容，并指定 MIME 类型为 "application/pdf"
+                        return File(fileContents, "application/pdf");
+                    }
+        
+                    // 重定向的示例
+                    [HttpGet("redirect")]
+                    public ActionResult RedirectExample()
+                    {
+                        // 返回 HTTP 状态码 302 Found，并重定向到指定的 URL
+                        // 注意：URL 应该是一个有效的地址
+                        return Redirect("https://example.com");
+                    }
+        
+                    // 返回问题详情的示例
+                    [HttpGet("problem")]
+                    public ActionResult ProblemExample()
+                    {
+                        // 返回 HTTP 状态码 500 Internal Server Error，并附带详细的错误信息
+                        return Problem(detail: "An error occurred", statusCode: 500);
+                    }
                 }
-    
-                // 未找到资源的示例
-                [HttpGet("not-found")]
-                public ActionResult NotFoundExample()
-                {
-                    // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
-                    return NotFound(new { error = "Resource not found" });
-                }
-    
-                // 请求无效的示例
-                [HttpGet("bad-request")]
-                public ActionResult BadRequestExample()
-                {
-                    // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
-                    return BadRequest(new { error = "Invalid input" });
-                }
-    
-                // 创建资源的示例
-                [HttpGet("created")]
-                public ActionResult CreatedExample()
-                {
-                    // 创建一个新实体对象
-                    var newEntity = new { Id = 1, Name = "New Entity" };
-                    // 返回 HTTP 状态码 201 Created，并附带新创建资源的 URI 和实体内容
-                    // 使用 CreatedAtAction 方法生成指向新资源的 URI
-                    return CreatedAtAction(nameof(GetById), new { id = newEntity.Id }, newEntity);
-                }
-    
-                // 禁止访问的示例
-                [HttpGet("forbidden")]
-                public ActionResult ForbiddenExample()
-                {
-                    // 返回 HTTP 状态码 403 Forbidden
-                    return Forbidden();
-                }
-    
-                // 自定义状态码的示例
-                [HttpGet("custom-status")]
-                public ActionResult CustomStatus()
-                {
-                    // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
-                    return StatusCode(503, new { error = "Service Unavailable" });
-                }
-    
-                // 返回文件的示例
-                [HttpGet("file")]
-                public ActionResult FileExample()
-                {
-                    // 读取本地文件的内容（假设文件名为 "example.pdf"）
-                    byte[] fileContents = System.IO.File.ReadAllBytes("example.pdf");
-                    // 返回文件内容，并指定 MIME 类型为 "application/pdf"
-                    return File(fileContents, "application/pdf");
-                }
-    
-                // 重定向的示例
-                [HttpGet("redirect")]
-                public ActionResult RedirectExample()
-                {
-                    // 返回 HTTP 状态码 302 Found，并重定向到指定的 URL
-                    // 注意：URL 应该是一个有效的地址
-                    return Redirect("https://example.com");
-                }
-    
-                // 返回问题详情的示例
-                [HttpGet("problem")]
-                public ActionResult ProblemExample()
-                {
-                    // 返回 HTTP 状态码 500 Internal Server Error，并附带详细的错误信息
-                    return Problem(detail: "An error occurred", statusCode: 500);
-                }
-            }
+            ```
     IActionResult类：
         - 属性：
             示例：
-                namespace YourNamespace
-                {
-                    [ApiController]
-                    [Route("api/[controller]")]
-                    public class MyController : ControllerBase
+
+                ```csharp
+                    namespace YourNamespace
                     {
-                        // 模拟的用户数据
-                        private static List<Person> people = new List<Person>
+                        [ApiController]
+                        [Route("api/[controller]")]
+                        public class MyController : ControllerBase
                         {
-                            new Person { Id = 1, Name = "张三", Age = 12, Gender = "男" },
-                            new Person { Id = 2, Name = "王五", Age = 19, Gender = "男" }
-                        };
-    
-                        // 成功响应示例
-                        [HttpGet("success")]
-                        public IActionResult Success()
-                        {
-                            // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
-                            return Ok(new { message = "Request succeeded" });
+                            // 模拟的用户数据
+                            private static List<Person> people = new List<Person>
+                            {
+                                new Person { Id = 1, Name = "张三", Age = 12, Gender = "男" },
+                                new Person { Id = 2, Name = "王五", Age = 19, Gender = "男" }
+                            };
+        
+                            // 成功响应示例
+                            [HttpGet("success")]
+                            public IActionResult Success()
+                            {
+                                // 返回 HTTP 状态码 200 OK，并附带一个 JSON 对象作为响应内容
+                                return Ok(new { message = "Request succeeded" });
+                            }
+        
+                            // 未找到资源的示例
+                            [HttpGet("not-found")]
+                            public IActionResult NotFoundExample()
+                            {
+                                // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
+                                return NotFound(new { error = "Resource not found" });
+                            }
+        
+                            // 请求无效的示例
+                            [HttpGet("bad-request")]
+                            public IActionResult BadRequestExample()
+                            {
+                                // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
+                                return BadRequest(new { error = "Invalid input" });
+                            }
+        
+                            // 禁止访问的示例
+                            [HttpGet("forbidden")]
+                            public IActionResult ForbiddenExample()
+                            {
+                                // 返回 HTTP 状态码 403 Forbidden
+                                return StatusCode(403, new { error = "Access is forbidden." });
+                            }
+        
+                            // 自定义状态码的示例
+                            [HttpGet("custom-status")]
+                            public IActionResult CustomStatus()
+                            {
+                                // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
+                                return StatusCode(503, new { error = "Service Unavailable" });
+                            }
+        
+                            // 返回文件的示例
+                            [HttpGet("file")]
+                            public IActionResult FileExample()
+                            {
+                                // FileContentResult：返回文件二进制内容。
+                                // FileStreamResult：返回文件流。
+                                // PhysicalFileResult：返回物理路径上的文件。
+                                // 读取本地文件的内容（假设文件名为 "example.pdf"）
+                                byte[] fileContents = System.IO.File.ReadAllBytes("example.pdf");
+                                // 返回文件内容，并指定 MIME 类型为 "application/pdf"
+                                return File(fileContents, "application/pdf");
+                            }
+        
+                            // 重定向的示例
+                            [HttpGet("redirect")]
+                            public IActionResult RedirectExample()
+                            {
+                                // 返回 HTTP 状态码 302 Found，并重定向到指定的 URL
+                                // 可用作错误查询数据返回内容
+                                return Redirect("https://example.com");
+                            }
+        
+                            // 返回问题详情的示例
+                            [HttpGet("problem")]
+                            public IActionResult ProblemExample()
+                            {
+                                // 返回 HTTP 状态码 500 Internal Server Error，并附带详细的错误信息
+                                return Problem(detail: "An error occurred", statusCode: 500);
+                            }
+        
+                            // 返回挑战响应的示例（通常用于身份验证）
+                            [HttpGet("challenge")]
+                            public IActionResult ChallengeExample()
+                            {
+                                // 返回 HTTP 状态码 401 Unauthorized，并触发身份验证挑战
+                                return Challenge();
+                            }
+        
+                            // 返回登出响应的示例
+                            [HttpGet("signout")]
+                            public IActionResult SignOutExample()
+                            {
+                                // 返回 HTTP 状态码 200 OK，并触发用户登出
+                                return SignOut();
+                            }
+        
+                            // 返回 JSON 格式的响应的示例
+                            [HttpGet("json")]
+                            public IActionResult json()
+                            {
+                                // 返回 JSON 格式的响应内容
+                                var data = new { Message = "Hello, World!" };
+                                return Json(data);
+                            }
+                            // 返回任意内容响应的示例
+                            [HttpGet("any")]
+                            public IActionResult any()
+                            {
+                                // 返回任意内容响应内容
+                                return Content("Hello, World!");
+                            }
                         }
-    
-                        // 未找到资源的示例
-                        [HttpGet("not-found")]
-                        public IActionResult NotFoundExample()
+        
+                        // 定义 Person 类
+                        public class Person
                         {
-                            // 返回 HTTP 状态码 404 Not Found，并附带一个 JSON 对象作为错误信息
-                            return NotFound(new { error = "Resource not found" });
-                        }
-    
-                        // 请求无效的示例
-                        [HttpGet("bad-request")]
-                        public IActionResult BadRequestExample()
-                        {
-                            // 返回 HTTP 状态码 400 Bad Request，并附带一个 JSON 对象作为错误信息
-                            return BadRequest(new { error = "Invalid input" });
-                        }
-    
-                        // 禁止访问的示例
-                        [HttpGet("forbidden")]
-                        public IActionResult ForbiddenExample()
-                        {
-                            // 返回 HTTP 状态码 403 Forbidden
-                            return StatusCode(403, new { error = "Access is forbidden." });
-                        }
-    
-                        // 自定义状态码的示例
-                        [HttpGet("custom-status")]
-                        public IActionResult CustomStatus()
-                        {
-                            // 返回自定义的 HTTP 状态码 503 Service Unavailable，并附带错误信息
-                            return StatusCode(503, new { error = "Service Unavailable" });
-                        }
-    
-                        // 返回文件的示例
-                        [HttpGet("file")]
-                        public IActionResult FileExample()
-                        {
-                            // FileContentResult：返回文件二进制内容。
-                            // FileStreamResult：返回文件流。
-                            // PhysicalFileResult：返回物理路径上的文件。
-                            // 读取本地文件的内容（假设文件名为 "example.pdf"）
-                            byte[] fileContents = System.IO.File.ReadAllBytes("example.pdf");
-                            // 返回文件内容，并指定 MIME 类型为 "application/pdf"
-                            return File(fileContents, "application/pdf");
-                        }
-    
-                        // 重定向的示例
-                        [HttpGet("redirect")]
-                        public IActionResult RedirectExample()
-                        {
-                            // 返回 HTTP 状态码 302 Found，并重定向到指定的 URL
-                            // 可用作错误查询数据返回内容
-                            return Redirect("https://example.com");
-                        }
-    
-                        // 返回问题详情的示例
-                        [HttpGet("problem")]
-                        public IActionResult ProblemExample()
-                        {
-                            // 返回 HTTP 状态码 500 Internal Server Error，并附带详细的错误信息
-                            return Problem(detail: "An error occurred", statusCode: 500);
-                        }
-    
-                        // 返回挑战响应的示例（通常用于身份验证）
-                        [HttpGet("challenge")]
-                        public IActionResult ChallengeExample()
-                        {
-                            // 返回 HTTP 状态码 401 Unauthorized，并触发身份验证挑战
-                            return Challenge();
-                        }
-    
-                        // 返回登出响应的示例
-                        [HttpGet("signout")]
-                        public IActionResult SignOutExample()
-                        {
-                            // 返回 HTTP 状态码 200 OK，并触发用户登出
-                            return SignOut();
-                        }
-    
-                        // 返回 JSON 格式的响应的示例
-                        [HttpGet("json")]
-                        public IActionResult json()
-                        {
-                            // 返回 JSON 格式的响应内容
-                            var data = new { Message = "Hello, World!" };
-                            return Json(data);
-                        }
-                        // 返回任意内容响应的示例
-                        [HttpGet("any")]
-                        public IActionResult any()
-                        {
-                            // 返回任意内容响应内容
-                            return Content("Hello, World!");
+                            public int Id { get; set; }
+                            public string Name { get; set; }
+                            public int Age { get; set; }
+                            public string Gender { get; set; }
                         }
                     }
-    
-                    // 定义 Person 类
-                    public class Person
-                    {
-                        public int Id { get; set; }
-                        public string Name { get; set; }
-                        public int Age { get; set; }
-                        public string Gender { get; set; }
-                    }
-                }
+                ```
         - 使用方法：
           1. 通过查询字符串传递参数
               查询字符串是附加在 URL 末尾的键值对，通常用于传递可选参数。例如：
@@ -297,6 +303,16 @@
     [FromRoute] 当前请求中的路由数据
     [FromServices] 作为操作参数插入的请求服务
     [AsParameters] 方法参数
+
+    ```csharp
+        // Guid 的存储和传输
+        // 在数据库中，Guid 通常以 uniqueidentifier 类型存储（在 SQL Server 中）。在实体框架（Entity Framework）中，可以将实体的主键设置为 Guid 类型。
+        public class MyEntity
+        {
+            public Guid Id { get; set; }
+            // 其他属性
+        }
+    ```
 
 ## WebAPI基础
 
@@ -867,17 +883,17 @@
         1. 传统路由：使用统一的路由模板来定义，并应用到所有控制器上
             - 在Aps.net Core MVC中使用传统路由，在Program中统一配置
               - 示例：
-                  '''
+                  ```csharp
                       app.MapControllerRoute(
                           name:"default",
                           pattern:"{controller=Home}/{action=Index}/{id}"
                       )
-                  '''
+                  ```
             - 在Aps.net Core Webapi中使用属性路由，Program中并没有配置模板
               - 示例：
-                    '''
+                    ```
                         app.MapControllers();
-                    '''
+                    ```
         2. 属性路由：使用属性来定义路由，可以创建出描述资源层次结构的URL
     
     在Aps.net Core中，属性路由和传统路由使用的相同的路由引擎，也就是内部实现的机制是一样的
@@ -891,7 +907,7 @@
     
         路由控制器模板
             示例：
-                '''
+                ```
                     [ApiController]
                     [Route("api/[controller]")] // [controller]：作为通配符
                     public class TestController : ControllerBase
@@ -899,7 +915,7 @@
                         [HttpGet("GetStr")] // 使用了Http动词模板
                         pubilc IActionResult GetStr(){}
                     }
-                '''
+                ```
             访问地址：
                 api/Test/GetStr
 
@@ -956,7 +972,7 @@
             示例：
                 api/teacher/GetName
             放置位置1：
-                '''
+                ```
                     [ApiController]
                     [Route("api/[controller]/[action]")]
                     public class TeacherController : ControllerBase
@@ -967,9 +983,9 @@
                             return Ok("你好");
                         }
                     }
-                '''
+                ```
             放置位置2：
-                '''
+                ```
                     [ApiController]
                     [Route("api/[controller]/[action]")]
                     public class TeacherController : ControllerBase
@@ -981,11 +997,11 @@
                         }
                     }
     
-                '''
+                ```
     
         在路由模板中，{}只要用来表示参数值，用于替换具体的参数值
             示例：api/teacher/getname/1
-                '''
+                ```
                     [ApiController]
                     [Route("api/[controller]/[action]")]
                     public class TeacherController : ControllerBase
@@ -997,13 +1013,13 @@
                         }
                     }
     
-                '''
+                ```
             可选参数：
                 在路由模板中，还可以使用？指定参数为可选
                 示例：
                     api/teacher/getname/1
                     api/teacher/getname
-                    '''
+                    ```
                         [ApiController]
                         [Route("api/[controller]/[action]")]
                         public class TeacherController : ControllerBase
@@ -1014,7 +1030,7 @@
                                 return Ok(123 + id);
                             }
                         }
-                    '''
+                    ```
     
     3. 默认值
         在路由模板中，还可以给参数指定一个默认值，与可选参数效果类似，都是在访问时参数为可选
@@ -1034,7 +1050,7 @@
     
     对于 Web API 控制器中的操作方法，必须指定一个或多个路由属性，用于接收 HTTP 请求。如果未指定路由属性，则默认使用 HttpGet 方法
         示例：
-            '''
+            ```
                 [HttpGet]
                 [HttpGet("GetNotRouteTemp")]
                 [HttpGet("{id}")]
@@ -1043,10 +1059,10 @@
                     if (id != 0) return Ok(id);
                     return Ok("Get not route template");
                 }
-            '''
+            ```
     如果不想在控制器上使用路由模板，也可以将其放在操作上
         示例：
-            '''
+            ```
                 [ApiController]
                 public class NotControllerHttpTemplateController : ControllerBase
                 {
@@ -1067,7 +1083,7 @@
                     }
     
                 }
-            '''
+            ```
         如果控制器没有定义 [Route] 属性，操作方法不能直接使用 [HttpGet]，必须在 [HttpGet] 中指定具体的路由路径，否则会导致路由冲突或报错。
             请求地址分别为
                 - /NotControllerHttpTemplate/GetNotRouteTemp
@@ -1165,7 +1181,7 @@
     在属性路由中，路由模板不仅可以出现在控制器上，还可以出现在操作上，可以将控制器上的路由模板和操作上的路由模板进行合并
         1. 操作上有多个模板
             示例：
-                '''
+                ```csharp
                     [HttpGet]
                     [HttpGet("MoreTemp")]
                     [HttpGet("MoreTemp/{id}")]
@@ -1174,10 +1190,10 @@
                         if (id == 0) return Ok("多模板_A");
                         return Ok("多模板_B");
                     }
-                '''
+                ```
         2. 控制器和操作上多个模板
             示例：
-                '''
+                ```
                     [ApiController]
                     [Route("api/[controller]")]
                     [Route("api/account")]
@@ -1192,26 +1208,26 @@
                             return Ok("多模板_B");
                         }
                     }
-                '''
+                ```
             注意控制器和操作上多个模板时，不要使用属性路由的Name属性，Name属性是唯一的
 
 ### 自定义路由属性
 
     使用IRouteTemplateProvider接口实现自定义路由
         语法：
-            '''
+            ```
                 public interface IRouteTemplateProvider
                 {
                     string Name {get;} // 可选，用于路由指定名称
                     int? Order {get;} // 用于控制多个路由匹配时的优先级，值越小级越高
                     string Template {get;} // 指定实际路由模板，如 api/[controller]/[action]
                 }
-            '''
+            ```
     
     创建自定义路由
         1. 定义一个自定义类，并继承Attribute接口和IRouteTemplateProvider接口
             示例：
-                '''
+                ```
                     public class MyIRouteTemplateProviderAttribute : Attribute, IRouteTemplateProvider
                     {
                         public string? Name { get; set; }
@@ -1230,9 +1246,9 @@
                             }
                         }
                     }
-                '''
+                ```
             调用：
-                '''
+                ```
                     [MyIRouteTemplateProvider]
                     public class WatchController : ControllerBase
                     {
@@ -1242,13 +1258,13 @@
                             return Ok("我的路由");
                         }
                     }
-                '''
+                ```
         2. 自定义属性路由格式
             自定义路由名 + Attribute : Attribute, IRouteTemplateProvider
             需要以Attribute结尾，并且继承Attribute接口类和IRouteTemplateProvider接口类
         3. 通过属性赋值，动态生成自定义路由路径
             示例：
-                '''
+                ```
                     public class MyRouteAttribute : Attribute, IRouteTemplateProvider
                     {
                         public string Prefix { get; set; } = "default"; // 通过属性赋值
@@ -1265,7 +1281,7 @@
                         [HttpGet]
                         public IActionResult Test() => Ok("Test");
                     }
-                '''
+                ```
 
 ## 5_接口管理和测试
 
@@ -1281,20 +1297,20 @@
     配置NSwag
         1. 安装NSwag.AspNetCore包
         2. 注册NSwag服务（Program.cs）
-            '''
+            ```
                 var builder = WebApplication.CreateBuilder(args);
                 builder.Services.AddControllers();
                 <!-- 注册NSwag服务 -->
                 builder.Services.AddSwaggerDocument();
-            '''
+            ```
         3. 注册中间件（Program.cs）
-            '''
+            ```
                 app.UseHttpsRedirection();
                 <!-- 启用OpenApi -->
                 app.UseOpenApi();
                 <!-- 启用Swagger UI，版本为3 -->
                 app.app.UseSwaggerUI3();
-            '''
+            ```
 
 ### 5_4_Swagger自定义文档
 
@@ -1302,7 +1318,7 @@
         using Microsoft.OpenApi.Models;
     2. 使用 OpenApiInfo 类修改 UI 中显示的信息    
         示例：
-            '''
+            ```
                 builder.Services.AddSwaggerGen(options =>
                 {
                     options.SwaggerDoc("v1", new OpenApiInfo
@@ -1323,29 +1339,29 @@
                         }
                     });
                 });
-            '''
+            ```
 
 ### 5_6_Swagger显示注释
 
     1. 在解决方案资源管理器中右键单击该项目，然后选择“Edit <project_name>.csproj”。
     2. 将 GenerateDocumentationFile 添加到 .csproj 文件
         示例：
-            '''
+            ```
                 <PropertyGroup>
                     <GenerateDocumentationFile>true</GenerateDocumentationFile>
                     <!-- 在项目文件中忽略的以分号分隔的警告代码列表 -->
                     <NoWarn>$(NoWarn);1591</NoWarn>
                 </PropertyGroup>
-            '''
+            ```
     3. 反射用于生成与 Web API 项目相匹配的 XML 文件名。 AppContext.BaseDirectory属性用于构造 XML 文件的路径。 一些 Swagger 功能（例如，输入参数的架构， 或各自属性中的 HTTP 方法和响应代码）无需使用 XML 文档文件即可起作用。 对于大多数功能（即方法摘要以及参数说明和响应代码说明），必须使用 XML 文件
         示例：
-            '''
+            ```
                 builder.Services.AddSwaggerGen(s =>
                 {
                     string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                     s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
                 });
-            '''
+            ```
 
 ## 6_1_Cors跨域
 
@@ -1374,7 +1390,7 @@
 ### 6_3_命名策略跨域(推荐使用)
 
     1. 注册Cors服务（指定URL和请求方式）
-        '''
+        ```
             builder.Services.AddCors(options =>
             {
                 <!-- cors就是命名策略名称 -->
@@ -1385,22 +1401,22 @@
                         .AllowAnyHeader();
                 });
             });
-        '''
+        ```
     2. 启用跨域（全局跨域）
-        '''
+        ```
             app.UseHttpsRedirection();
 
             // 启用中间件跨域
             app.UseCors("cors");
-        '''
+        ```
     3. 设置发布后的URL地址
-        '''
+        ```
             app.Urls.Add("https://*:6001");
-        '''
+        ```
     补充：
         配置多个跨域策略
             语法：
-                '''
+                ```
                     // 配置跨域（指定请求URL）
                     builder.Services.AddCors(options =>
                     {
@@ -1417,7 +1433,7 @@
                                 .AllowAnyHeader();
                         });
                     });
-                '''
+                ```
 
 ### 6_4_终结点跨域(.net6以上不被推荐)
 
@@ -1427,7 +1443,7 @@
         2. 注释掉app.MapControllers()
         3. 必须将app.UseCors()放在app.UseRouting()的下面，app.Endpoints()上面
         语法：
-            '''
+            ```
                 <!-- 路由中间件 -->
                 app.UseRouting();
                 <!-- 授权中间件 -->
@@ -1440,7 +1456,7 @@
                     end.MapControllers()
                         .RequireCors("Cors");
                 });
-            '''
+            ```
 
 ### 6_5_属性跨域（部分跨域）
 
@@ -1453,34 +1469,34 @@
 
     在使用 [EnableCors()] 时需要使用无参数的UseCors()，将策略转到控制器和操作去配置
         语法：
-            '''
+            ```
                 app.UseCors();
 
                 app.UseAuthorization();
 
                 app.MapControllers();
-            '''
+            ```
     在Api中使用[EnableCors()]
         语法一（在主控制器上使用）：
-            '''
+            ```
                 [EnableCors("cors")]
                 [ApiController]
                 [Route("api/[controller]")]
                 public class UsersController : ControllerBase{}
-            '''
+            ```
         语法二（在操作上使用）：
-            '''
+            ```
                 [EnableCors("cors")]
                 [HttpGet("GetUsersAll")]
                 public IActionResult GetUsersAll(){}
-            '''
+            ```
     [DisableCors()]属性
         1. 可以禁用Cors
         2. 但是 [DisableCors()] 不会禁用已经使用终结点路由启用的跨域（cors）
         3. 在控制器上使用 [EnableCors()] ，如果控制器下某个操作不想使用跨域，则可以使禁用掉
         4. 如果在全局启用了跨域，[DisableCors()] 可以禁用特定控制器或操作的跨域
             示例：
-                '''
+                ```
                     [DisableCors]
                     [ApiController]
                     [Route("api/[controller]")]
@@ -1492,7 +1508,7 @@
                             return Ok("This data is not accessible via CORS");
                         }
                     }
-                '''
+                ```
 
     在Asp.net中，对于限制Cors请求的最佳控制是 [EnableCors("策略名称（cors）")] 与命名策略一起使用，不推荐使用默认策略
 
@@ -1501,7 +1517,7 @@
     使用默认策略跨域 app.UseCors() 中不需要传值
 
     语法：
-        '''
+        ```
             // 默认策略
             options.AddDefaultPolicy(policy =>
             {
@@ -1511,13 +1527,13 @@
             });
 
             app.UseCors();
-        '''
+        ```
     调用：
-        '''
+        ```
             [EnableCors()] // 可选
             [HttpGet("GetUsersAll")]
             public IActionResult GetUsersAll(){}
-        '''
+        ```
 
     使用默认策略可以让指定客户端URL地址访问api服务器所有控制器上的操作
     启用默认策略的针对整个api资源的跨域，不能将跨域灵活的下放到终结点、控制器、操作上
@@ -1530,7 +1546,7 @@
             - WithOrigins 设置指定来源，类型为string[]
             - SetIsOriginAllowedToAllowWildcardSubdomains 允许来源匹配设置通配符url
                 语法：
-                    '''
+                    ```
                         options.AddPolicy("cors", builder =>
                         {
                             builder.WithOrigins("http://*:5500")
@@ -1538,7 +1554,7 @@
                                 .WithMethods()
                                 .AllowAnyHeader();
                         });
-                    '''
+                    ```
         2. 设置允许HTTP的方法
             - AllowAnyMethod 允许所有请求方式
             - WithMethods 指定允许的请求方式
@@ -1556,7 +1572,7 @@
             - SetPreflightMaxAge(TimeSpan.FromMinutes(10)) 表示浏览器可以缓存预检结果 10 分钟，不必每次请求都预检
 
         完整配置：
-            '''
+            ```
                 builder.Services.AddCors(options =>
                 {
                     options.AddPolicy("Default", policy =>
@@ -1569,4 +1585,456 @@
                             .AllowCredentials();
                     });
                 });
-            '''
+            ```
+
+## 7_ADO.NET数据库操作
+
+### 7_3_配置数据库连接字符串
+
+    连接字符串：
+        ```
+            "ConnectionStrings": {
+                "OrderList": "Server=localhost\\MSSQLSERVER01;Database=panda;Trusted_Connection=True;Trust Server Certificate=True;Encrypt=True"
+            }
+        ```
+        Server：表示指定服务器名称
+        ConnectionStrings: 配置数据库连接字符串的节点名称
+        Trust Server Certificate=True;Encrypt=True: 表示启用安全连接
+
+    安装Microsoft.Extensions.Configuration.json包
+
+    创建Data文件夹    
+        创建AppConfigurtaionServices.cs
+        ```
+            using Microsoft.Extensions.Configuration.Json;
+
+            namespace AppConfigurtaionServices_ADO
+            {
+                public class AppConfigurtaionServices
+                {
+                    public static IConfiguration? Configuration { get; set; }
+                    static AppConfigurtaionServices()
+                    {
+                        Configuration = new ConfigurationBuilder()
+                        .Add(new JsonConfigurationSource
+                        {
+                            Path = "appsettings.json",
+                            ReloadOnChange = true
+                        }).Build();
+                    }
+                }
+            }
+
+            <!-- 不使用静态类 -->
+            public class AppConfigurtaionServices
+            {
+                public IConfiguration Configuration { get; set; }
+                public AppConfigurtaionServices(IConfiguration configuration)
+                {
+                    Configuration = configuration;
+                }
+            }
+        ```
+        IConfiguration 提供了一种标准化的方式来访问配置数据，无论这些数据来自哪里。你可以通过相同的接口访问 appsettings.json 文件中的配置、环境变量、命令行参数等
+        IConfiguration 是一个接口，它定义了以下方法和属性：
+            GetSection(string key)：获取指定键的配置节。
+            GetValue<T>(string key)：获取指定键的配置值，并将其转换为指定的类型。
+            GetConnectionString(string name)：获取指定名称的连接字符串。
+            GetSection(string key)：获取指定键的配置节。
+
+### 7_4_封装ADO.NET操作
+
+    1. 添加类文件，创建MSSqlDemo，用来封装ADO.NET操作sql server数据库
+    2. 添加Microsoft.Data.SqlClient包
+    3. 封装增删改操作
+        - 同步方法
+        - 异步方法
+    4. 封装读取操作
+        - 在ADO.NET中，SqlDataReader对象表示提供一种从sql server数据库中以流的方式读取
+          - 同步方法
+          - 异步方法
+    5. 获取首行首列
+        - 在ADO.NET中，可以使用SqlCommand对象中的ExecuteScalar()方法来返回表中首行首列
+          - 同步方法
+          - 异步方法
+
+### 7_5_创建实体模型
+
+    1. 除了GET操作，POST/PUT/DELETE操作都是以实体的形式执行操作
+
+### 7_6_添加信息
+
+    ```json
+        // 测试json
+        {
+            "taskeCode": "202506124706XUANHUA",
+            "taskTypeID": 1,
+            "groupID": 2,
+            "productTypeID": 7,
+            "orderByNumber": "253 -KF38341SL item 6-1"
+        }
+    ```
+
+### 7_7_查询信息
+
+    ```csharp
+        public async Task<ActionResult<List<OrderDetail>>> GetOrders()
+        {
+            <!-- 创建一个存储列表 -->
+            List<OrderDetail> getorder = new List<OrderDetail>();
+            <!-- 获取查询结果流 -->
+            SqlDataReader sqlDataReader = await MSSqlDemo.GetSqlDataReaderAsync("SELECT * FROM CompareOrderList", connectionString);
+
+            if (!sqlDataReader.HasRows) return NoContent();
+            <!-- sqlDataReader.Read() 返回值为布尔值，有数据则读取，没有数据则跳出循环 -->
+            while (sqlDataReader.Read())
+            {
+                getorder.Add(new OrderDetail()
+                {
+                    <!-- 每行每列的索引值 -->
+                    TaskeCode = sqlDataReader.GetString(0),
+                    TaskTypeID = sqlDataReader.GetInt32(1),
+                    GroupID = sqlDataReader.GetInt32(2),
+                    ProductTypeID = sqlDataReader.GetInt32(3),
+                    OrderByNumber = sqlDataReader.GetString(4)
+                });
+            }
+            <!-- 关闭数据库时，将调用的SqlConnection对象也会关闭（CommandBehavior.CloseConnection） -->
+            sqlDataReader.Close();
+            return Ok(getorder);
+        }
+
+        Task<ActionResult<List<OrderDetail>>>: 返回的数据类型为 List<OrderDetail>
+        ActionResult：返回操作结果
+            可以使用 Task<IActionResult>
+    ```
+
+### 7_8_删除信息
+
+    ```csharp
+        <!-- 没用使用防止sql注入 -->
+        public static async Task<int> ExecuteNonQueryAsync(string sql, string connectionString)
+        {
+
+            using (SqlConnection sqlConn = new SqlConnection(connectionString))
+            {
+                sqlConn.Open();
+                SqlCommand sqlcmd = sqlConn.CreateCommand();
+                sqlcmd.CommandText = sql;
+                sqlcmd.CommandType = CommandType.Text;
+                return await sqlcmd.ExecuteNonQueryAsync();
+            }
+        }
+        <!-- 调用 -->
+        public async Task<IActionResult> DelOrder(string taskcode)
+        {
+            if (taskcode == "") return BadRequest(new { error = "Delete Order Erroe" });
+
+            int ret = await MSSqlDemo.ExecuteNonQueryAsync($"DELETE FROM CompareOrderList WHERE TaskeCode='{taskcode}'", connectionString);
+
+            return Ok(ret);
+        }
+
+        <!-- 防止sql注入 -->
+        public static async Task<int> ExecuteNonQueryAsync(string sql, string connectionString, SqlParameter[] parameters = null)
+        {
+            using (SqlConnection sqlConn = new SqlConnection(connectionString))
+            {
+                await sqlConn.OpenAsync(); // 使用异步方法打开连接
+                using (SqlCommand sqlcmd = sqlConn.CreateCommand())
+                {
+                    sqlcmd.CommandText = sql;
+                    sqlcmd.CommandType = CommandType.Text;
+
+                    // 如果有参数，则添加到命令中
+                    if (parameters != null)
+                    {
+                        sqlcmd.Parameters.AddRange(parameters);
+                    }
+
+                    // 执行命令并返回受影响的行数
+                    return await sqlcmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+        <!-- 调用 -->
+        public async Task<IActionResult> DelOrder(string taskcode)
+        {
+            if (string.IsNullOrWhiteSpace(taskcode)) return BadRequest(new { error = "Delete Order Error: TaskCode is required" });
+
+            // 构建参数化查询
+            string query = "DELETE FROM CompareOrderList WHERE TaskeCode = @taskcode";
+
+            // 创建参数
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@taskcode", taskcode)
+            };
+
+            // 调用封装的 ExecuteNonQueryAsync 方法
+            int rowsAffected = await MSSqlDemo.ExecuteNonQueryAsync(query, connectionString, parameters);
+
+            return Ok(new { message = "Order deleted successfully" });
+        }
+    ```
+
+### 7_9_更新信息
+
+    ```csharp
+        <!-- 防止依赖注入写法 -->
+        public async Task<IActionResult> UpdateOrder([FromBody] OrderDetail orderDetail)
+        {
+            if (string.IsNullOrEmpty(orderDetail.TaskeCode))
+            {
+                return BadRequest(new { error = "Task Code is required" });
+            }
+
+            // 构建参数化 SQL 查询
+            string sql = @"
+                UPDATE CompareOrderList 
+                SET TaskTypeID = @TaskTypeID, 
+                    GroupID = @GroupID, 
+                    ProductTypeID = @ProductTypeID, 
+                    OrderByNumber = @OrderByNumber 
+                WHERE TaskeCode = @TaskeCode";
+
+            // 构建参数
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@TaskTypeID", orderDetail.TaskTypeID),
+                new SqlParameter("@GroupID", orderDetail.GroupID),
+                new SqlParameter("@ProductTypeID", orderDetail.ProductTypeID),
+                new SqlParameter("@OrderByNumber", orderDetail.OrderByNumber),
+                new SqlParameter("@TaskeCode", orderDetail.TaskeCode)
+            };
+
+            // 执行更新操作
+            int ret = await MSSqlDemo.ExecuteNonQueryAsync(sql, connectionString, parameters);
+
+            return Ok(ret);
+        }
+        <!-- 更新方法 -->
+        public static async Task<int> ExecuteNonQueryAsync(string sql, string connectionString, IEnumerable<SqlParameter> parameters = null)
+        {
+            using (SqlConnection sqlConn = new SqlConnection(connectionString))
+            {
+                sqlConn.Open();
+                SqlCommand sqlcmd = sqlConn.CreateCommand();
+                sqlcmd.CommandText = sql;
+                sqlcmd.CommandType = CommandType.Text;
+
+                if (parameters != null)
+                {
+                    sqlcmd.Parameters.AddRange(parameters.ToArray());
+                }
+
+                return await sqlcmd.ExecuteNonQueryAsync();
+            }
+        }
+    ```
+
+## 8_EFCore数据库操作
+
+### 8_1_环境搭建
+
+    1. ORM:对象关系映射
+       - 在关系型数据库和对象之间根据某种规则建立映射关系，屏蔽掉内部底层的数据库操作（sql语句），而是使用对象的方式来操作
+    2. ORM工具应用在WebApi的服务器端
+    3. EFCore的底层使用的就是ADO.NET技术
+
+### 8_2_安装EFCore
+
+    安装程序包
+       1. Microsoft.EntityFrameworkCore.SqlServer
+       2. Microsoft.EntityFrameworkCore
+
+### 8_3_数据库表结构设计
+
+    ```sql 订单数据库
+        CREATE TABLE [dbo].[CompareOrderList] (
+            [TaskCode]      NVARCHAR (20)  NOT NULL,
+            [TaskTypeID]    INT            NULL,
+            [GroupID]       INT            NULL,
+            [ProductTypeID] INT            NULL,
+            [OrderByNumber] NVARCHAR (MAX) NULL,
+            CONSTRAINT [PK_CompareOrderList] PRIMARY KEY CLUSTERED ([TaskCode] ASC)
+        );
+    ```
+
+    ```sql 小组数据库
+        CREATE TABLE [dbo].[ToggleGroup] (
+            [Id]               INT            IDENTITY (1, 1) NOT NULL,
+            [UUGroupID]        INT            NULL,
+            [GroupByName]      NVARCHAR (MAX) NULL,
+            [GroupState]       BIT            NULL,
+            [GroupDescription] NVARCHAR (50)  NULL,
+            CONSTRAINT [PK__ToggleGr__3214EC073B3D1625] PRIMARY KEY CLUSTERED ([Id] ASC)
+        );
+    ```
+
+    在EFCore中采用Code First（代码优先）的方式来实现Webapi的开发
+
+### 8_4_创建实体模型
+
+    - 实体模型主要是与数据库中的表结构建立关联，在各层之间传递实体数据，这些数据最终会通过数据访问层传递到数据库
+    - 而对于实体模型，一般情况下都是与表中字段对应的，实现底层的数据访问
+    - 实体模型就是一个类，对实体模型进行实例化就变为对象，对象就可以进行操作存储数据
+
+    外键 [ForeignKey] 是一种数据库关系完整性约束，用于在一个表中建立与另一个表中数据的链接
+
+        ```csharp
+            // 设置外键
+            [ForeignKey("xx")]
+        ```
+
+### 8_5_配置DbContext
+
+    - DbContext能够让我们创建的实体模型与EF Cor本身功能结合在一起
+    - 对于EF Core ORM框架来说，调用其中对象的入口就是DbContext，称为数据库上下文
+    - 创建DbContext类
+        - 使用泛型DbSet<T>指定要操作的实体模型
+    - 注册DbContext服务
+
+        ```csharp
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        ```
+        - options.UseSqlServer() 表示使用sql server数据库
+        - builder.Configuration.GetConnectionString() 获取appsettings中的数据库连接字符串
+    - 开发环境中生成数据库和表结构（能够在sqlserver中自动生成表和表结构）
+
+        ```csharp
+            var scope = app.Services.CreateScope();
+            scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated(); // 返回值为bool类型
+        ```
+
+    ```json
+        // 测试json
+        {
+            "taskCode": "202506124706XUANHUA",
+            "taskTypeID": 1,
+            "groupID": 2,
+            "productTypeID": 7,
+            "orderByNumber": "253 -KF38341SL item 6-1"
+        }
+    ```
+
+### 8_6_添加订单
+
+    ```csharp
+        public List<CompareOrderListData> AddNewOrder(CompareOrderListData compareOrderListData)
+        {
+            _context.CompareOrderList.Add(compareOrderListData);
+
+            _context.SaveChanges();
+
+            return _context.CompareOrderList.ToList();
+        }
+    ```
+
+    使用SaveChanges()将数据保存到数据库中（添加、更新、删除都适用）
+
+    异步添加数据
+
+        ```csharp
+            // 添加接口
+            Task<List<CompareOrderListData>> AddNewOrderAsync(CompareOrderListData compareOrderListData);
+            // 定义操作
+            public async Task<List<CompareOrderListData>> AddNewOrderAsync(CompareOrderListData compareOrderListData)
+            {
+                _context.CompareOrderList.Add(compareOrderListData);
+
+                await _context.SaveChangesAsync();
+
+                return _context.CompareOrderList.ToList();
+            }
+            // 添加控制器
+            [HttpPost("AddNewOrderAsync")]
+            public async Task<IActionResult> AddNewOrderAsync([FromBody] CompareOrderListData compareOrderListData)
+            {
+                if (compareOrderListData.TaskCode == null) return BadRequest(new { error = "Invalid input" });
+
+                var result = await _serviceCompareOrderList.AddNewOrderAsync(compareOrderListData);
+                
+                return Ok(result);
+            }
+
+        ```
+    同步：
+        线程执行到SaveChanges()时，必须等待数据库返回结果，期间线程被占用
+    异步：
+        线程遇到await时，立刻返回线程池，等数据库操作完成后再恢复执行
+
+### 8_7_显示订单
+
+### 8_8_编辑订单
+
+    异步更新数据
+
+    ```csharp
+        // 定义操作
+        public async Task<CompareOrderListData> UpdateOrderAsync(CompareOrderListData compareOrderListData)
+        {
+            if (compareOrderListData == null) return new CompareOrderListData();
+            // 更新操作
+            _context.Entry(compareOrderListData).State = EntityState.Modified;
+            // 执行操作
+            await _context.SaveChangesAsync();
+
+            return compareOrderListData;
+        }
+        // 添加控制器
+        [HttpPut("UpdateCompareOrderAsync")]
+        public IActionResult UpdateCompareOrderAsync(CompareOrderListData compareOrderListData)
+        {
+            return Ok(_serviceCompareOrderList.UpdateOrderAsync(compareOrderListData));
+        }
+    ```
+
+    使用局部更新（不使用Patch）
+
+    ```csharp
+        public async Task<CompareOrderListData> UpdateOrderAsyncTwo(CompareOrderListData compareOrderListData)
+        {
+            if (compareOrderListData == null) return new CompareOrderListData();
+
+            CompareOrderListData? OldOrder = await _context.CompareOrderList
+                                            .FirstOrDefaultAsync(c => c.TaskCode == compareOrderListData.TaskCode);
+
+            if (OldOrder == null) return null;
+
+            OldOrder.ProductTypeID = compareOrderListData.ProductTypeID;
+
+            // 执行操作
+            await _context.SaveChangesAsync();
+
+            return compareOrderListData;
+        }
+    ```
+
+### 8_9_删除产品分类
+
+    删除数据的两种方法：
+        - 逻辑删除
+          - 只在表中修改字段标记，并在筛选时排除这些标记内容，实际并未从表中删除，可以恢复
+        - 物理删除
+          - 直接从数据库中删除，无法恢复，只能从备份中查找
+
+    ```csharp
+        // 删除操作
+        public List<CompareOrderListData> DeleteOrder(string taskcode)
+        {
+            if (taskcode == null) return new List<CompareOrderListData>();
+
+            CompareOrderListData? delOrder = _context.CompareOrderList
+                                            .FirstOrDefault(c => c.TaskCode == taskcode);
+
+            if (delOrder == null) return new List<CompareOrderListData>();
+
+            _context.CompareOrderList.Remove(delOrder);
+
+            _context.SaveChanges();
+
+            return _context.CompareOrderList.ToList();
+        }
+    ```
