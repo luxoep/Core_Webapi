@@ -883,6 +883,7 @@
         1. 传统路由：使用统一的路由模板来定义，并应用到所有控制器上
             - 在Aps.net Core MVC中使用传统路由，在Program中统一配置
               - 示例：
+
                   ```csharp
                       app.MapControllerRoute(
                           name:"default",
@@ -1905,7 +1906,8 @@
 
         ```csharp
             var scope = app.Services.CreateScope();
-            scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated(); // 返回值为bool类型
+            // 返回值为bool类型，为false时，会创建新的数据库，并添加字段；当为true时，则表示数据库已经存在，则不会创建
+            scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated(); 
         ```
 
     ```json
@@ -2038,3 +2040,298 @@
             return _context.CompareOrderList.ToList();
         }
     ```
+
+## 9_JWT身份认证和授权
+
+    - JWT验证过程
+        身份验证
+            - 基于Session
+            - 基于Session的身份验证是将身份验证的Token放在了服务器上，使用会话进行身份确认
+            - 优点：安全性高
+            - 缺点：每个会话都会占用大量服务器资源
+            - 基于Cookies
+            - 基于Cookies的身份验证是将身份验证的Token放在了客户端上，分担服务器的压力 
+            - 对于web应用程序，大多数都是用Cookies进行身份验证
+
+        JWT
+            - 对于webapi ，它只在服务器端提供数据，是无状态的，基于HTTP协议的Api接口，调用webapi服务器的客户端是多样的
+
+        JWT支持分布式身份验证
+            - 授权服务器：提供JWT身份验证和授权
+            - webapi资源服务器：提供数据资源
+            - web客户端：Html+css+js 实现客户端
+
+        - JWT是JSON Web Token的简称，是一种基于JSON用于在网络上声明主体的令牌
+        - Token（AccessToken）包含了验证用户的相关声明（用户名、密码、年龄、邮件等），一般是经过编码的一段字符串
+        - AccessToken
+        - 在服务器端生成
+        - 对于客户端来说，只是拿到了一个Token，不受任何平台限制
+        - webapi是基于Http协议，Token就是存储在Http头，然后在客户端和服务器端之间传输
+
+        基于JWT身份验证，常用于小程序、移动App、单页应用程序SPA等
+
+        基于JWT的身份验证过程
+            1. 客户端将用户名、密码、其他属性值发送到专门生成Token的服务器上申请令牌
+            2. 授权服务器拿到用户名、密码、其他属性进行验证、也就是在数据库中进行匹配，如果匹配的成功，则根据此身份生成一个唯一的Token
+            ，并以JWT的格式返回
+            3. 客户端拿到Token后，就放在Http请求头中，发送到请求资源的服务器上，在资源管理器上解析出Token
+            然后根据Token来响应客户端是否对请求的webapi具有权限
+
+    - JWT的组成
+      - 对于JWT有三部分：
+        - Base64编码的Header
+        - Base64编码的Payload
+        - 签名
+      - Header
+        - JWT的第一部分：Base64编码的Header主要包括Token的类型和所使用的算法两部分组成
+        - 使用JSON数据表示：
+
+            ```json
+                {"type":"JWT", "alg":"Hs256"}
+            ```
+            - 说明
+              - 使用type表示Token的类型就是JWT
+              - 使用alg表示使用的算法是HS256,哈希256算法
+        - 对这些JSON数据进行Base64编码，编码后为：eyJ0eXBlIjoiSldUIiwgImFsZyI6IkhzMjU2In0=
+      - Payload
+        - JWT的第二部分：Base64编码的Payload，也称为有效载荷，是存放有效信息的地方
+        - Payload有效信息的三部分组成
+          - 标准中注册的声明
+            - iss：jwt签发者
+            - sub：jwt所面向的用户
+            - aud：接收jwt的一方
+            - exp：jwt的过期时间，这个过期时间必须要大于签发时间
+            - nbf：定义在什么时间之前，该jwt不可用
+            - iat：jwt的签发时间
+            - jti：jwt的唯一身份标识，只要用来作为一次性Token
+          - 公共声明
+            - 公共声明可以添加任何信息，一般添加用户的相关信息或者其他业务需要的必须信息，但不建议添加敏感信息，因为客户端可以解密
+            - 私有声明是提供和消费者所共同定义的声明，一般不建议存放敏感信息，因为base64是对称解密的，以为该部分信息可以归为明文信息 
+          - 示例
+
+            ```json
+                {"sub":"Globe", "name":"Jerry", "admin":true}
+            ```
+      - 签名
+        - JWT的第三部分是一个签名，对应前两部分（Header、Payload）的签名，防止篡改
+      - JWT的三部分的base64编码使用圆点隔开
+        
+        ```base64
+            eyJ0eXBlIjoiSldUIiwgImFsZyI6IkhzMjU2In0=.
+            eyJzdWIiOiJHbG9iZSIsICJuYW1lIjoiSmVycnkiLCAiYWRtaW4iOnRydWV9.
+            aa
+        ```
+    - JWT的优点
+      - JWT是基于JSON格式的，且不受任何客户端的限制，跨平台跨语言
+        1. JWT是基于JSON格式，通用性强，夸任何变成语言使用
+        2. 在Payload部分可存储一些业务相关的信息，但不要放敏感信息
+        3. JSON简单轻量，便于快速传输
+        4. 适合无状态的信息传输，不需要在服务器和客户端上存储信息
+        5. 使用Https协议更安全
+        6. 第三部分的密钥很关键，是安全的重要关口
+
+### 9_2_创建授权服务器
+
+    AuthController.cs
+
+### 9_3_授权服务器-配置EFCore组件
+
+### 9_4_授权服务器-生成数据库和表结构
+
+    参考：8_5_配置DbContext
+
+### 9_5_授权服务器-添加用户
+
+### 9_6_授权服务器-生成AccessToken
+
+    输入 JWT token。例如: Bearer {your token}
+
+    ```csharp
+        private readonly IRoleUserService _roleUserService;
+        private readonly IConfiguration _config;
+
+        public AuthController(IRoleUserService roleUserService, IConfiguration config)
+        {
+            _roleUserService = roleUserService;
+            _config = config;
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest login)
+        {
+            if (login.LoginId == null) return Ok("登录名不能为空");
+            // 查找第一行数据FirstOrDefault
+            // 返回符合条件的user
+
+            RoleUserData? user = _roleUserService.GetRoleUserDataAll()
+                        .FirstOrDefault(u => u.LoginId?.ToUpper() == login.LoginId.ToUpper() && u.PassWord == login.PassWord);
+
+            if (user == null)
+                return Unauthorized("用户名或密码错误");
+
+            // 获取密钥（存放在appsettings.Development.json）
+            string secretKey = _config["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is missing in configuration.");
+
+            // 创建一个用于 JWT 加密签名的密钥（对称密钥）对象
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+            // SecurityAlgorithms.HmacSha256 使用HS256进行加密key
+            // 用字符串 secretKey 构建出一个对称加密的密钥对象，用于 JWT 的签名和验证
+            SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            // 排除空值
+            ArgumentNullException.ThrowIfNull(user.LoginId);
+
+            // 声明信息
+            Claim[] claims = new[]{
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim("Role", user.LoginId)
+            };
+
+            // 判断是否为空
+            // 获取持续时间
+            string expiresMinutes = _config["Jwt:ExpiresMinutes"] ?? throw new InvalidOperationException("JWT ExpiresMinutes is missing in configuration.");
+
+            JwtSecurityToken token = new JwtSecurityToken(
+                // 颁发者信息，验证时也需要
+                issuer: _config["Jwt:Issuer"],
+                // 接收者信息
+                audience: _config["Jwt:Audience"],
+                // 声明信息
+                claims: claims,
+                // 过期时间
+                expires: DateTime.UtcNow.AddMinutes(double.Parse(expiresMinutes)),
+                // 凭据（密钥）
+                signingCredentials: credentials
+            );
+
+            return Ok(new
+            {
+                // WriteToken(...) 会把 JwtSecurityToken 对象编码为最终返回给客户端的 Base64 JWT 字符串
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+
+                // 表示这个 Token 的过期时间。
+                // DateTime.UtcNow 是当前时间（使用 UTC）
+                // AddMinutes(...) 是添加指定分钟数，来自配置（如 60 分钟）
+                expires = DateTime.UtcNow.AddMinutes(double.Parse(expiresMinutes))
+            });
+            /*
+                返回示例：
+                    {
+                        "token": "xxx.xxx.xxx",
+                        "expires": "2025-07-29T12:00:00Z"
+                    }
+            */
+        }
+
+        public class LoginRequest
+        {
+            public string? LoginId { get; set; }
+            public string? PassWord { get; set; }
+        }
+    ```
+
+### 9_7_授权服务器-配置JWT组件
+
+    Microsoft.AspNetCore.Authentication.JwtBearer 用来验证签发的Token的颁发者、密钥、接收者等信息
+
+    ```csharp
+        // 获取私钥，并验证是否为空
+        string? secretKey = builder.Configuration["Jwt:SecretKey"] ?? 
+        throw new InvalidOperationException("JWT SecretKey is missing in configuration."); ;
+
+        // 创建一个用于 JWT 加密签名的密钥（对称密钥）对象
+        // 把 secretKey 这个字符串转换成 字节数组
+        // JWT 签名算法（如 HS256）是基于字节数据来生成哈希的
+        // 所以必须把字符串变成字节（Byte[]）
+        // new SymmetricSecurityKey() 表示使用 对称加密（Symmetric） 的密钥（比如用于 HMAC-SHA256）
+        // 用字符串 secretKey 构建出一个对称加密的密钥对象，用于 JWT 的签名和验证
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    // 是否验证颁发者
+                    ValidateIssuer = true,
+                    // 是否验证接收者
+                    ValidateAudience = true,
+                    // 是否验证失效时间
+                    ValidateLifetime = true,
+                    // 是否调用对签名Token的密钥验证
+                    ValidateIssuerSigningKey = true,
+                    // 颁发者
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    // 接收者
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = key
+                };
+            });
+    ```
+
+### 9_8_授权服务器-编写Api接口
+
+    在多种类型下或不确定类型下，可以使用dynamic（动态）类型
+    在控制器上或操作上使用[Authorize]进行访问保护
+
+### 9_9_授权服务器-测试AccessToken访问Api资源
+
+### 9_10_授权服务器-基于策略的授权
+
+    1. token 中添加的这些 Claim (AuthController.cs) 信息
+
+        ```csharp
+            Claim[] claims = new[]{
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.LoginId),
+                new Claim(ClaimTypes.Role, user.LoginId),
+                new Claim("Department", department)  // 自定义字段，也可以用于策略匹配
+            };
+            // 建议写为
+            Claim[] claims = new[]{
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.LoginId),
+                new Claim("Admin", user.LoginId),
+                new Claim("Permission", user.LoginId)
+            };
+        ```
+    2. 在 AddAuthorization (Program.cs) 中定义的策略
+
+        ```csharp
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                    policy.RequireRole("E1286879"));
+
+                options.AddPolicy("MustBeHR", policy =>
+                    policy.RequireClaim("Department", "HR"));
+
+                //.....
+            });
+            // 建议写为
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                    policy.RequireClaim("Admin", "E1286879"));
+                
+                options.AddPolicy("UserSelect", policy =>
+                    policy.RequireClaim("Permission", "E1286888"));
+            });
+        ```
+    3. 添加到控制器权限
+
+        ```csharp
+            [Authorize(Policy = "HROnly")]
+            [HttpGet("hr-info")]
+            public IActionResult GetHRInfo()
+            {
+                return Ok("只有 HR 部门可访问");
+            }
+        ```
+
+### 9_11_授权服务器-刷新AccessToken
+
+    刷新Token，得到一个新的Token继续让客户端方法问资源，而不是重新登录，通过旧的Token换取新的Token
+
+### 9_12-9_15 Web客户端项目
