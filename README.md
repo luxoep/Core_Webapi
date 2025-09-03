@@ -314,6 +314,42 @@
         }
     ```
 
+### 在Docker上部署sql server
+
+    1. docker pull mcr.microsoft.com/mssql/server:2022-latest
+        - docker pull ：从远程仓库下载镜像
+        - mcr.microsoft.com/mssql/server ：微软官方 SQL Server 镜像仓库
+        - 2022-latest ：指定版本（这里是 SQL Server 2022 最新版）
+    2. docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=2159372lxh123**" -p 14333:1433 --name sqlserver2022 -v sqlserver_data:/var/opt/mssql -d mcr.microsoft.com/mssql/server:2022-latest
+        - docker run ：启动一个新的容器
+        - -e ：设置环境变量
+        - ACCEPT_EULA=Y → 同意微软的许可协议（必填，否则容器会退出）
+        - SA_PASSWORD=YourStrong!Passw0rd → 设置 SQL Server 管理员密码
+        - -p ：端口映射 14333:1433 → 宿主机端口 14333 对应容器端口 1433，在 SSMS 里连 localhost,14333
+        - --name ：容器名字（这里叫 sqlserver2022）
+        - -v ：挂载卷
+        - sqlserver_data:/var/opt/mssql → 数据存储到 Docker 卷 sqlserver_data，容器删掉也不会丢
+        - -d ：后台运行（detached mode）
+        - mcr.microsoft.com/mssql/server:2022-latest ：指定镜像
+    3. 查看容器是否在运行
+        - docker ps
+            输出里应该能看到：
+                0.0.0.0:14333->1433/tcp 说明容器 SQL Server 的 1433 已经映射到宿主机 14333。
+    4. 用 SSMS 连接
+        - 服务器名称：localhost,14333
+        - 身份验证：SQL Server Authentication
+        - 登录名：sa
+        - 密码：2159372lxh123**
+    5. 容器管理常用命令
+        - 停止容器
+            docker stop sqlserver2022
+        - 启动容器
+            docker start sqlserver2022
+        - 删除容器（不删数据）
+            docker rm -f sqlserver2022
+        - 删除容器 + 数据（清理干净）
+            docker rm -f sqlserver2022 && docker volume rm sqlserver_data
+
 ## WebAPI基础
 
 ### 1-8
@@ -2335,3 +2371,21 @@
     刷新Token，得到一个新的Token继续让客户端方法问资源，而不是重新登录，通过旧的Token换取新的Token
 
 ### 9_12-9_15 Web客户端项目
+
+## 10_部署
+
+### 10_1_部署简介
+
+    部署结构：
+        WebApi服务器
+            Web客户端
+            桌面客户端
+            其他客户端
+        WebApi应用程序一般都会部署在性能好的服务器上，认证授权的客户端应用程序来访问
+    
+    - 在IIS上部署
+    - 在Docker容器上部署
+
+    反向代理服务器
+        不管是部署到IIS，还是部署到Docker中，都是作为反向代理服务器存在的，也就是IIS、Docker是直接面向用户的
+        而Asp.net Core本身是在Kestrel服务器上运行的，而Kestrel再与反向代理服务器通信
